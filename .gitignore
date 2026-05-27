@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+.tmp/
+.bun-cache/
+.env
+.env.*
+!.env.example
+*.local
