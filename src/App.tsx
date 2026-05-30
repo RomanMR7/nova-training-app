@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AccessDenied } from "./components/AccessDenied";
+import { AdminPanel } from "./components/AdminPanel";
 import { Dashboard } from "./components/Dashboard";
 import { FinalResult } from "./components/FinalResult";
 import { FinalCertificationQuiz } from "./components/FinalCertificationQuiz";
@@ -16,14 +17,23 @@ import {
   getTrainingSession,
   loadProgress,
   markModuleCompleted,
+  markSimulationCompleted,
   resetAllLocalTrainingData,
   resetCurrentUserProgress,
   saveFinalQuizScore,
+  saveProgress,
   saveQuizScore,
   saveTrainingSession,
   selectRole
 } from "./lib/progress";
 import type { QuizScore } from "./lib/quiz";
+import {
+  isSupabaseConfigured,
+  loadSupabaseProgress,
+  refreshTrainingEmployeeSession,
+  refreshSupabaseSession,
+  saveSupabaseProgress
+} from "./lib/supabase";
 import type { Role } from "./training-content";
 import { getModuleById, getModulesForRole } from "./training-content";
 import {
@@ -42,6 +52,7 @@ type Screen =
   | "scenario"
   | "quiz"
   | "reference"
+  | "admin"
   | "certification"
   | "accessDenied"
   | "final";
@@ -65,6 +76,11 @@ function App() {
   const [screen, setScreen] = useState<Screen>("dashboard");
   const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
   const [deniedRole, setDeniedRole] = useState<Role | null>(null);
+  const [syncStatus, setSyncStatus] = useState("");
+  const [sessionReady, setSessionReady] = useState(() => {
+    const session = getTrainingSession();
+    return !(session?.source === "supabase" && isSupabaseConfigured());
+  });
 
   const selectedRole = currentRole;
   const isAdmin = isTrainingAdmin(currentUser);
@@ -82,8 +98,137 @@ function App() {
       selectedRole &&
       (isAdmin || activeModule.scenario.role === selectedRole)
   );
+  const isRemoteMode = Boolean(
+    currentUser?.source === "supabase" && isSupabaseConfigured()
+  );
 
-  function openRole(role: Role) {
+  function syncLabel() {
+    if (isRemoteMode) {
+      return syncStatus || "Supabase sync включен";
+    }
+
+    return "Offline demo: прогресс локально";
+  }
+
+  async function getFreshUserForSync(
+    user: TrainingSessionUser
+  ): Promise<TrainingSessionUser> {
+    if (user.source !== "supabase" || !isSupabaseConfigured()) {
+      return user;
+    }
+
+    const freshUser = await refreshSupabaseSession(user);
+    if (
+      freshUser.supabaseAccessToken !== user.supabaseAccessToken ||
+      freshUser.supabaseRefreshToken !== user.supabaseRefreshToken
+    ) {
+      saveTrainingSession(freshUser);
+      setCurrentUser(freshUser);
+    }
+
+    return freshUser;
+  }
+
+  async function loadProgressForRole(user: TrainingSessionUser, role: Role) {
+    const localProgress = loadProgress(user.email, role);
+    setProgress(localProgress);
+
+    if (user.source !== "supabase" || !isSupabaseConfigured()) {
+      setSyncStatus("Offline demo: прогресс хранится только в этом браузере.");
+      return localProgress;
+    }
+
+    try {
+      setSyncStatus("Загрузка прогресса из Supabase...");
+      const freshUser = await getFreshUserForSync(user);
+      const remoteProgress = await loadSupabaseProgress(freshUser, role);
+      const cachedProgress = saveProgress(remoteProgress, freshUser.email, role);
+      setProgress(cachedProgress);
+      setSyncStatus("Прогресс синхронизирован с Supabase.");
+      return cachedProgress;
+    } catch (error) {
+      setSyncStatus(
+        error instanceof Error
+          ? `Supabase недоступен: ${error.message}`
+          : "Supabase недоступен. Показан локальный кэш."
+      );
+      return localProgress;
+    }
+  }
+
+  async function persistProgressForRole(
+    user: TrainingSessionUser,
+    role: Role,
+    nextProgress: ReturnType<typeof saveProgress>
+  ) {
+    if (user.source !== "supabase" || !isSupabaseConfigured()) {
+      setSyncStatus("Offline demo: прогресс сохранен локально.");
+      return;
+    }
+
+    try {
+      setSyncStatus("Сохранение прогресса в Supabase...");
+      const freshUser = await getFreshUserForSync(user);
+      await saveSupabaseProgress(freshUser, role, nextProgress);
+      setSyncStatus("Прогресс сохранен в Supabase.");
+    } catch (error) {
+      setSyncStatus(
+        error instanceof Error
+          ? `Не удалось сохранить в Supabase: ${error.message}`
+          : "Не удалось сохранить в Supabase. Локальный кэш сохранен."
+      );
+    }
+  }
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function validateRemoteSession() {
+      if (!currentUser || currentUser.source !== "supabase") {
+        setSessionReady(true);
+        return;
+      }
+
+      try {
+        setSyncStatus("Проверка Supabase-сессии...");
+        const verifiedUser = await refreshTrainingEmployeeSession(currentUser);
+        if (cancelled) {
+          return;
+        }
+
+        saveTrainingSession(verifiedUser);
+        setCurrentUser(verifiedUser);
+        const safeRole =
+          currentRole && canAccessRole(verifiedUser, currentRole)
+            ? currentRole
+            : getDefaultRoleForUser(verifiedUser);
+        setCurrentRole(safeRole);
+        await loadProgressForRole(verifiedUser, safeRole);
+      } catch {
+        if (!cancelled) {
+          clearTrainingSession();
+          setCurrentUser(null);
+          setCurrentRole(null);
+          setProgress({ ...emptyProgress });
+          setSyncStatus("");
+        }
+      } finally {
+        if (!cancelled) {
+          setSessionReady(true);
+        }
+      }
+    }
+
+    void validateRemoteSession();
+
+    return () => {
+      cancelled = true;
+    };
+    // Verify stored Supabase profile once before trusting role data from localStorage.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function openRole(role: Role) {
     if (!currentUser || !canAccessRole(currentUser, role)) {
       setDeniedRole(role);
       setScreen("accessDenied");
@@ -94,9 +239,10 @@ function App() {
     setProgress(loadProgress(currentUser.email, role));
     setActiveModuleId(null);
     setScreen("dashboard");
+    await loadProgressForRole(currentUser, role);
   }
 
-  function handleLogin(user: TrainingSessionUser) {
+  async function handleLogin(user: TrainingSessionUser) {
     saveTrainingSession(user);
     const role = getDefaultRoleForUser(user);
     setCurrentUser(user);
@@ -104,6 +250,7 @@ function App() {
     setProgress(loadProgress(user.email, role));
     setActiveModuleId(null);
     setScreen("dashboard");
+    await loadProgressForRole(user, role);
   }
 
   function handleLogout() {
@@ -113,9 +260,10 @@ function App() {
     setProgress({ ...emptyProgress });
     setActiveModuleId(null);
     setScreen("dashboard");
+    setSessionReady(true);
   }
 
-  function handleSelectRole(role: Role) {
+  async function handleSelectRole(role: Role) {
     if (!currentUser || !canAccessRole(currentUser, role)) {
       setDeniedRole(role);
       setScreen("accessDenied");
@@ -125,6 +273,7 @@ function App() {
     setCurrentRole(role);
     setProgress(selectRole(role, currentUser.email));
     setScreen("dashboard");
+    await loadProgressForRole(currentUser, role);
   }
 
   function handleOpenModule(moduleId: string) {
@@ -150,7 +299,9 @@ function App() {
       return;
     }
 
-    setProgress(markModuleCompleted(moduleId, currentUser.email, selectedRole));
+    const nextProgress = markModuleCompleted(moduleId, currentUser.email, selectedRole);
+    setProgress(nextProgress);
+    void persistProgressForRole(currentUser, selectedRole, nextProgress);
   }
 
   function handleSaveQuizScore(moduleId: string, score: QuizScore) {
@@ -158,7 +309,9 @@ function App() {
       return;
     }
 
-    setProgress(saveQuizScore(moduleId, score, currentUser.email, selectedRole));
+    const nextProgress = saveQuizScore(moduleId, score, currentUser.email, selectedRole);
+    setProgress(nextProgress);
+    void persistProgressForRole(currentUser, selectedRole, nextProgress);
   }
 
   function handleSaveFinalQuizScore(score: QuizScore, examRole?: Role) {
@@ -171,6 +324,18 @@ function App() {
     if (roleForScore === selectedRole) {
       setProgress(updatedProgress);
     }
+    void persistProgressForRole(currentUser, roleForScore, updatedProgress);
+  }
+
+  function handleCompleteScenario(moduleId: string, scenarioId: string) {
+    if (!currentUser || !selectedRole) {
+      return;
+    }
+
+    markSimulationCompleted(scenarioId, currentUser.email, selectedRole);
+    const nextProgress = markModuleCompleted(moduleId, currentUser.email, selectedRole);
+    setProgress(nextProgress);
+    void persistProgressForRole(currentUser, selectedRole, nextProgress);
   }
 
   function handleResetProgress() {
@@ -178,9 +343,11 @@ function App() {
       return;
     }
 
-    setProgress(resetCurrentUserProgress(currentUser.email, selectedRole));
+    const nextProgress = resetCurrentUserProgress(currentUser.email, selectedRole);
+    setProgress(nextProgress);
     setActiveModuleId(null);
     setScreen("dashboard");
+    void persistProgressForRole(currentUser, selectedRole, nextProgress);
   }
 
   function handleResetAllTrainingData() {
@@ -190,9 +357,39 @@ function App() {
     setProgress({ ...emptyProgress });
     setActiveModuleId(null);
     setScreen("dashboard");
+    setSessionReady(true);
   }
 
   let content;
+
+  if (!sessionReady) {
+    return (
+      <main className="login-shell">
+        <section className="login-panel" aria-label="Проверка учебной сессии">
+          <div className="login-copy">
+            <div className="brand-lockup large">
+              <img
+                alt=""
+                className="brand-mark"
+                src="./anchor-pay-logo.png"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                }}
+              />
+              <div>
+                <p className="eyebrow">Учебный тренажер рабочего места</p>
+                <h1>Anchor Pay</h1>
+              </div>
+            </div>
+            <p className="lead">
+              Проверяем учебную Supabase-сессию и назначенную роль. Данные роли
+              берутся из Supabase, а не из локально изменяемого состояния браузера.
+            </p>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   if (!currentUser) {
     return <LoginScreen onLogin={handleLogin} />;
@@ -243,6 +440,8 @@ function App() {
         onOpenFinal={() => setScreen("final")}
         onOpenModule={handleOpenModule}
         onOpenReference={() => setScreen("reference")}
+        canOpenAdminPanel={isAdmin}
+        onOpenAdminPanel={() => setScreen("admin")}
       />
     );
   } else if (screen === "reference") {
@@ -250,6 +449,19 @@ function App() {
       <ReferenceCenter
         currentUser={currentUser}
         role={selectedRole}
+        onBack={() => setScreen(selectedRole ? "dashboard" : "welcome")}
+      />
+    );
+  } else if (screen === "admin") {
+    content = isAdmin ? (
+      <AdminPanel
+        currentUser={currentUser}
+        onBack={() => setScreen(selectedRole ? "dashboard" : "welcome")}
+      />
+    ) : (
+      <AccessDenied
+        requestedRole="Администратор"
+        user={currentUser}
         onBack={() => setScreen(selectedRole ? "dashboard" : "welcome")}
       />
     );
@@ -285,7 +497,7 @@ function App() {
         scenario={activeModule.scenario}
         onBack={() => setScreen("module")}
         onFinish={() => {
-          handleCompleteModule(activeModule.id);
+          handleCompleteScenario(activeModule.id, activeModule.scenario!.id);
           setScreen("module");
         }}
       />
@@ -313,6 +525,11 @@ function App() {
         modules={modules}
         progress={progress}
         role={selectedRole}
+        storageLabel={
+          isRemoteMode
+            ? "Сводка синхронизируется с Supabase для администратора обучения."
+            : "Сводка хранится локально в браузере и не отправляется во внешние сервисы."
+        }
         onBack={() => setScreen("dashboard")}
       />
     );
@@ -345,6 +562,7 @@ function App() {
           <span className="account-badge">{currentUser.displayName}</span>
           {selectedRole ? <span className="role-badge">{selectedRole}</span> : null}
           <span className="status-pill">{accessibleRoles.length} ролей доступно</span>
+          <span className="status-pill sync-pill">{syncLabel()}</span>
           <button className="ghost-button compact" type="button" onClick={handleResetProgress}>
             Сбросить прогресс
           </button>

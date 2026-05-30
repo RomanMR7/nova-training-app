@@ -11,6 +11,8 @@ interface DashboardProps {
   onOpenFinal: () => void;
   onOpenReference: () => void;
   onOpenCertification: () => void;
+  canOpenAdminPanel: boolean;
+  onOpenAdminPanel: () => void;
   onChangeRole: () => void;
 }
 
@@ -23,6 +25,8 @@ export function Dashboard({
   onOpenFinal,
   onOpenReference,
   onOpenCertification,
+  canOpenAdminPanel,
+  onOpenAdminPanel,
   onChangeRole
 }: DashboardProps) {
   const [query, setQuery] = useState("");
@@ -66,7 +70,9 @@ export function Dashboard({
           <h1 id="dashboard-title">Учебная смена</h1>
           <p>
             Рабочий маршрут для роли <strong>{role}</strong>. Все операции
-            учебные: без реальных денег, пользователей, API-вызовов и backend.
+            учебные: без реальных денег, production-пользователей и платежных
+            API. Прогресс может храниться локально или синхронизироваться в
+            учебном Supabase.
           </p>
         </div>
         <div className="dashboard-actions">
@@ -81,6 +87,11 @@ export function Dashboard({
           <button className="secondary-button" type="button" onClick={onOpenCertification}>
             Финальная проверка
           </button>
+          {canOpenAdminPanel ? (
+            <button className="secondary-button" type="button" onClick={onOpenAdminPanel}>
+              Админ-панель
+            </button>
+          ) : null}
           <button className="primary-button" type="button" onClick={onOpenFinal}>
             Итоги
           </button>
@@ -248,12 +259,18 @@ export function Dashboard({
         </button>
         <button className="quick-link" type="button" onClick={onOpenCertification}>
           <strong>Финальная проверка</strong>
-          <span>Ролевой учебный результат сохраняется локально</span>
+          <span>Ролевой учебный результат сохраняется в текущем режиме</span>
         </button>
         <button className="quick-link" type="button" onClick={onOpenFinal}>
           <strong>Прогресс</strong>
           <span>Завершенные модули, квизы, симуляции и результат проверки</span>
         </button>
+        {canOpenAdminPanel ? (
+          <button className="quick-link" type="button" onClick={onOpenAdminPanel}>
+            <strong>Сотрудники и статистика</strong>
+            <span>Создание аккаунтов, блокировки, роли, CSV и общий прогресс</span>
+          </button>
+        ) : null}
       </section>
     </section>
   );

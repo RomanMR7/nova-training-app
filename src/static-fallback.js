@@ -880,18 +880,19 @@
       '<section class="login-panel" aria-labelledby="login-title">' +
       '<div class="login-copy">' +
       '<div class="brand-lockup large"><img alt="" class="brand-mark" src="./public/anchor-pay-logo.png" onerror="this.style.display=&quot;none&quot;"><div><p class="eyebrow">Учебный тренажер рабочего места</p><h1 id="login-title">Anchor Pay</h1></div></div>' +
-      '<p class="lead">Надежная учебная гавань для практики ролей, заявок, апелляций, ledger и уведомлений. Нет реальных денег, реальных API-вызовов или подключения к backend.</p>' +
-      '<div class="safety-strip" aria-label="Ограничения тренажера"><span>Локальный прогресс</span><span>Нет реальных платежей</span><span>Нет backend-вызовов</span></div>' +
+      '<p class="lead">Надежная учебная гавань для практики ролей, заявок, апелляций, ledger и уведомлений. Нет реальных денег, production-API или подключения к платежным системам.</p>' +
+      '<div class="safety-strip" aria-label="Ограничения тренажера"><span>Offline demo</span><span>Нет реальных платежей</span><span>Локальный прогресс</span></div>' +
+      '<div class="mode-note warning">Прямое открытие index.html работает как offline demo. Централизованный вход сотрудников и статистика администратора доступны только в deployed-версии с Supabase env.</div>' +
       "</div>" +
       '<form class="login-form" id="fallback-login-form">' +
-      '<label><span>Email</span><input id="fallback-email" type="email" autocomplete="username" value="trader@training.local"></label>' +
-      '<label><span>Пароль</span><input id="fallback-password" type="password" autocomplete="current-password" value="Training123!"></label>' +
+      '<label><span>Email</span><input id="fallback-email" type="email" autocomplete="username" value=""></label>' +
+      '<label><span>Пароль</span><input id="fallback-password" type="password" autocomplete="current-password" value=""></label>' +
       (state.loginError ? '<div class="feedback negative" role="alert">' + escapeHtml(state.loginError) + "</div>" : "") +
       '<button class="primary-button" type="submit">Войти в тренажер</button>' +
       "</form>" +
       "</section>" +
       '<section class="demo-accounts" aria-labelledby="fallback-demo-title">' +
-      '<div class="section-heading"><p class="eyebrow">Учебные учетные записи</p><h2 id="fallback-demo-title">Учебные аккаунты</h2><p>Все аккаунты локальные. Пароль одинаковый: <strong>Training123!</strong></p></div>' +
+      '<div class="section-heading"><p class="eyebrow">Offline demo</p><h2 id="fallback-demo-title">Локальные учебные аккаунты</h2><p>Эти аккаунты нужны только для режима без Supabase. Пароль одинаковый: <strong>Training123!</strong>, но не подставляется автоматически.</p></div>' +
       '<div class="demo-account-grid">' +
       trainingUsers.map(function (user) {
         return (
@@ -1010,7 +1011,7 @@
 
     renderShell(
       '<section class="screen-stack" aria-labelledby="dashboard-title">' +
-      '<div class="dashboard-hero"><div><p class="eyebrow">Anchor Pay training simulator</p><h1 id="dashboard-title">Учебная смена</h1><p>Рабочий маршрут для роли <strong>' + escapeHtml(progress.selectedRole) + "</strong>. Все операции учебные: без реальных денег, пользователей, API-вызовов и backend.</p></div>" +
+      '<div class="dashboard-hero"><div><p class="eyebrow">Anchor Pay training simulator</p><h1 id="dashboard-title">Учебная смена</h1><p>Рабочий маршрут для роли <strong>' + escapeHtml(progress.selectedRole) + "</strong>. Все операции учебные: без реальных денег, production-пользователей и платежных API. В прямом открытии прогресс хранится только локально.</p></div>" +
       '<div class="dashboard-actions">' + (user && user.accessibleRoles.length > 1 ? '<button class="secondary-button" type="button" data-action="roles">Сменить роль</button>' : "") + '<button class="secondary-button" type="button" data-action="reference">Справочник</button><button class="secondary-button" type="button" data-action="certification">Финальная проверка</button><button class="primary-button" type="button" data-action="final">Итоги</button></div></div>' +
       '<section class="dashboard-section today-panel"><div class="section-heading"><p class="eyebrow">Сегодня в обучении</p><h2>Безопасная практика в учебной гавани</h2><p>Откройте модуль, закрепите решение в симуляции и сохраните результат локально.</p></div><div class="today-grid"><article class="dock-card"><span class="metric">' + (visible.length - completed) + '</span><span>модулей осталось</span></article><article class="dock-card"><span class="metric">' + scenarioCount + '</span><span>симуляций доступно</span></article><article class="dock-card"><span class="metric">' + percent + '%</span><span>прогресс маршрута</span></article></div></section>' +
       '<div class="progress-panel dashboard-section" aria-label="Прогресс обучения"><div class="progress-label"><span>Прогресс</span><strong>' + completed + " из " + visible.length + " модулей</strong></div><div class=\"progress-track\" aria-hidden=\"true\"><span style=\"width:" + percent + '%"></span></div></div>' +
@@ -1255,7 +1256,7 @@
       var emailInput = document.getElementById("fallback-email");
       var passwordInput = document.getElementById("fallback-password");
       if (emailInput) emailInput.value = control.dataset.email || "";
-      if (passwordInput) passwordInput.value = "Training123!";
+      if (passwordInput) passwordInput.value = "";
       state.loginError = "";
       return;
     }

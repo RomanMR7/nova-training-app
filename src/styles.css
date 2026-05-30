@@ -159,6 +159,12 @@ button:disabled {
   color: var(--success);
 }
 
+.sync-pill {
+  max-width: min(340px, 100%);
+  white-space: normal;
+  line-height: 1.25;
+}
+
 .primary-button,
 .secondary-button,
 .ghost-button {
@@ -446,6 +452,25 @@ li {
   font-weight: 800;
 }
 
+.mode-note {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.mode-note.positive {
+  border-color: rgba(118, 212, 154, 0.35);
+  background: rgba(118, 212, 154, 0.1);
+}
+
+.mode-note.warning {
+  border-color: rgba(240, 189, 88, 0.35);
+  background: rgba(240, 189, 88, 0.1);
+}
+
 .demo-account-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -467,6 +492,10 @@ li {
 .demo-account-card span {
   color: var(--muted);
   overflow-wrap: anywhere;
+}
+
+.demo-account-card.static {
+  cursor: default;
 }
 
 .section-heading {
@@ -726,6 +755,10 @@ li {
   padding: 14px;
 }
 
+.reference-toolbar.single {
+  grid-template-columns: minmax(220px, 1fr);
+}
+
 .reference-toolbar label {
   display: grid;
   gap: 6px;
@@ -884,6 +917,52 @@ li {
   align-content: start;
 }
 
+.admin-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.admin-form label,
+.admin-actions {
+  display: grid;
+  gap: 7px;
+}
+
+.admin-form label {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-actions input,
+.admin-actions select {
+  min-height: 42px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(11, 17, 24, 0.8);
+  color: var(--ink);
+  padding: 9px 12px;
+}
+
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.employee-card {
+  align-content: start;
+}
+
+.admin-actions {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
 .exam-selector {
   display: grid;
   gap: 10px;
@@ -957,10 +1036,15 @@ li {
   .status-grid,
   .module-guide-grid,
   .demo-account-grid,
+  .employee-grid,
   .today-grid,
   .simulation-strip,
   .action-harbor {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-form {
+    grid-template-columns: 1fr 1fr;
   }
 
   .module-deep-dive,
@@ -996,6 +1080,9 @@ li {
   .quick-link-grid,
   .module-guide-grid,
   .demo-account-grid,
+  .employee-grid,
+  .admin-form,
+  .admin-actions,
   .today-grid,
   .simulation-strip,
   .action-harbor,

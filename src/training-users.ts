@@ -12,7 +12,18 @@ export interface TrainingUser {
   accessibleRoles: TrainingRoleId[];
 }
 
-export type TrainingSessionUser = Omit<TrainingUser, "password">;
+export type TrainingSessionSource = "local" | "supabase";
+
+export type TrainingSessionUser = Omit<TrainingUser, "password"> & {
+  source?: TrainingSessionSource;
+  profileId?: string;
+  authUserId?: string;
+  isActive?: boolean;
+  note?: string;
+  supabaseAccessToken?: string;
+  supabaseRefreshToken?: string;
+  supabaseExpiresAt?: number;
+};
 
 export const roleIdToLabel: Record<TrainingRoleId, Role> = {
   admin: "Администратор",
@@ -92,7 +103,7 @@ function normalizeEmail(email: string): string {
 
 function toSessionUser(user: TrainingUser): TrainingSessionUser {
   const { password: _password, ...sessionUser } = user;
-  return sessionUser;
+  return { ...sessionUser, source: "local", isActive: true };
 }
 
 export function roleToId(role: Role | TrainingRoleId): TrainingRoleId {
@@ -148,4 +159,39 @@ export function getAccessibleRoleIds(user: TrainingSessionUser): TrainingRoleId[
 
 export function isTrainingAdmin(user: TrainingSessionUser | null): boolean {
   return user?.role === "admin";
+}
+
+export function createSessionUser(params: {
+  id: string;
+  email: string;
+  displayName: string;
+  role: TrainingRoleId;
+  source: TrainingSessionSource;
+  profileId?: string;
+  authUserId?: string;
+  isActive?: boolean;
+  note?: string;
+  supabaseAccessToken?: string;
+  supabaseRefreshToken?: string;
+  supabaseExpiresAt?: number;
+}): TrainingSessionUser {
+  const accessibleRoles =
+    params.role === "admin" ? allTrainingRoleIds : [params.role];
+
+  return {
+    id: params.id,
+    email: normalizeEmail(params.email),
+    displayName: params.displayName,
+    role: params.role,
+    roleLabel: roleIdToLabel[params.role],
+    accessibleRoles,
+    source: params.source,
+    profileId: params.profileId,
+    authUserId: params.authUserId,
+    isActive: params.isActive ?? true,
+    note: params.note,
+    supabaseAccessToken: params.supabaseAccessToken,
+    supabaseRefreshToken: params.supabaseRefreshToken,
+    supabaseExpiresAt: params.supabaseExpiresAt
+  };
 }

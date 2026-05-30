@@ -32,14 +32,14 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "Сменить роль" }));
     await user.click(screen.getByRole("button", { name: /Мерчант/i }));
 
-    expect(screen.getByText(/Показаны модули для роли/i)).toBeInTheDocument();
+    expect(screen.getByText("Учебные модули роли")).toBeInTheDocument();
     expect(screen.getAllByText("Мерчант").length).toBeGreaterThan(0);
   });
 
   it("filters modules by selected role", async () => {
     await loginAs("trader@training.local");
 
-    expect(screen.getByText("Депозит трейдера")).toBeInTheDocument();
+    expect(screen.getAllByText("Депозит трейдера").length).toBeGreaterThan(0);
     expect(screen.queryByText("Мерчанты и API")).not.toBeInTheDocument();
   });
 

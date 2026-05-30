@@ -6,10 +6,17 @@ interface FinalResultProps {
   role: Role;
   modules: TrainingModule[];
   progress: TrainingProgress;
+  storageLabel: string;
   onBack: () => void;
 }
 
-export function FinalResult({ role, modules, progress, onBack }: FinalResultProps) {
+export function FinalResult({
+  role,
+  modules,
+  progress,
+  storageLabel,
+  onBack
+}: FinalResultProps) {
   const completedModules = modules.filter((module) =>
     progress.completedModules.includes(module.id)
   );
@@ -35,10 +42,7 @@ export function FinalResult({ role, modules, progress, onBack }: FinalResultProp
       <div className="section-heading">
         <p className="eyebrow">Итоги</p>
         <h1 id="final-title">Прогресс обучения</h1>
-        <p>
-          Сводка Anchor Pay хранится локально в браузере и не отправляется во
-          внешние сервисы.
-        </p>
+        <p>{storageLabel}</p>
       </div>
 
       <div className="result-grid">

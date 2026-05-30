@@ -16,6 +16,7 @@ interface StorageLike {
 export interface TrainingProgress {
   selectedRole: Role | null;
   completedModules: string[];
+  completedSimulations: string[];
   quizScores: Record<string, QuizScore>;
   finalQuizScore?: QuizScore;
 }
@@ -23,6 +24,7 @@ export interface TrainingProgress {
 export const emptyProgress: TrainingProgress = {
   selectedRole: null,
   completedModules: [],
+  completedSimulations: [],
   quizScores: {}
 };
 
@@ -39,6 +41,9 @@ function normalizeProgress(value: Partial<TrainingProgress>): TrainingProgress {
     selectedRole: value.selectedRole ?? null,
     completedModules: Array.isArray(value.completedModules)
       ? [...new Set(value.completedModules)]
+      : [],
+    completedSimulations: Array.isArray(value.completedSimulations)
+      ? [...new Set(value.completedSimulations)]
       : [],
     quizScores:
       value.quizScores && typeof value.quizScores === "object"
@@ -86,6 +91,10 @@ export function getTrainingSession(storage = getStorage()): TrainingSessionUser 
     const parsed = JSON.parse(raw) as TrainingSessionUser;
     if (!parsed.email || !parsed.role || !Array.isArray(parsed.accessibleRoles)) {
       return null;
+    }
+
+    if (parsed.source === "supabase") {
+      return parsed;
     }
 
     return getTrainingUserByEmail(parsed.email);
@@ -189,6 +198,26 @@ export function saveQuizScore(
         ...progress.quizScores,
         [moduleId]: score
       }
+    },
+    userEmail,
+    role,
+    storage
+  );
+}
+
+export function markSimulationCompleted(
+  simulationId: string,
+  userEmail?: string,
+  role?: Role,
+  storage = getStorage()
+): TrainingProgress {
+  const progress = loadProgress(userEmail, role, storage);
+  return saveProgress(
+    {
+      ...progress,
+      completedSimulations: [
+        ...new Set([...progress.completedSimulations, simulationId])
+      ]
     },
     userEmail,
     role,

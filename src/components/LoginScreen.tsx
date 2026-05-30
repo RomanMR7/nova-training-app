@@ -4,27 +4,48 @@ import {
   trainingUsers,
   type TrainingSessionUser
 } from "../training-users";
+import {
+  getSupabaseModeLabel,
+  isSupabaseConfigured,
+  signInTrainingEmployee
+} from "../lib/supabase";
 
 interface LoginScreenProps {
-  onLogin: (user: TrainingSessionUser) => void;
+  onLogin: (user: TrainingSessionUser) => void | Promise<void>;
 }
 
 export function LoginScreen({ onLogin }: LoginScreenProps) {
-  const [email, setEmail] = useState("trader@training.local");
-  const [password, setPassword] = useState("Training123!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const centralizedMode = isSupabaseConfigured();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const user = authenticateTrainingUser(email, password);
-
-    if (!user) {
-      setError("Неверный email или пароль для учебного входа.");
-      return;
-    }
-
+    setIsSubmitting(true);
     setError("");
-    onLogin(user);
+
+    try {
+      const user = centralizedMode
+        ? await signInTrainingEmployee(email, password)
+        : authenticateTrainingUser(email, password);
+
+      if (!user) {
+        setError("Неверный email или пароль для учебного входа.");
+        return;
+      }
+
+      await onLogin(user);
+    } catch (nextError) {
+      setError(
+        nextError instanceof Error
+          ? nextError.message
+          : "Не удалось войти в учебный тренажер."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -48,12 +69,17 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           <p className="lead">
             Безопасная гавань для практики: роли, заявки, апелляции, ledger и
             уведомления изучаются только на учебных данных. Нет реальных денег,
-            реальных API-вызовов или подключения к backend.
+            реальных платежных API или подключения к production-системам.
           </p>
           <div className="safety-strip" aria-label="Ограничения тренажера">
-            <span>Локальный прогресс</span>
+            <span>{getSupabaseModeLabel()}</span>
             <span>Нет реальных платежей</span>
-            <span>Нет backend-вызовов</span>
+            <span>Учебная статистика</span>
+          </div>
+          <div className={`mode-note ${centralizedMode ? "positive" : "warning"}`}>
+            {centralizedMode
+              ? "Вход идет через Supabase Auth. Администратор создает учебные аккаунты и видит статистику по сотрудникам."
+              : "Supabase env не задан. Сейчас включен offline demo: локальные аккаунты и прогресс только в этом браузере."}
           </div>
         </div>
 
@@ -81,38 +107,59 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               {error}
             </div>
           ) : null}
-          <button className="primary-button" type="submit">
-            Войти в тренажер
+          <button className="primary-button" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Входим..." : "Войти в тренажер"}
           </button>
         </form>
       </section>
 
       <section className="demo-accounts" aria-labelledby="demo-title">
         <div className="section-heading">
-          <p className="eyebrow">Учебные учетные записи</p>
-          <h2 id="demo-title">Учебные аккаунты</h2>
+          <p className="eyebrow">
+            {centralizedMode ? "Централизованный вход" : "Offline demo"}
+          </p>
+          <h2 id="demo-title">
+            {centralizedMode ? "Как получить доступ" : "Локальные учебные аккаунты"}
+          </h2>
           <p>
-            Все аккаунты локальные. Пароль одинаковый: <strong>Training123!</strong>
+            {centralizedMode
+              ? "Используйте email и временный пароль, которые выдал администратор обучения. Пароль не хранится в таблицах приложения."
+              : "Эти аккаунты работают только без Supabase-конфига. Пароль одинаковый: Training123!, но он не подставляется автоматически."}
           </p>
         </div>
-        <div className="demo-account-grid">
-          {trainingUsers.map((user) => (
-            <button
-              className="demo-account-card"
-              key={user.id}
-              type="button"
-              onClick={() => {
-                setEmail(user.email);
-                setPassword("Training123!");
-                setError("");
-              }}
-            >
-              <strong>{user.displayName}</strong>
-              <span>{user.email}</span>
-              <span>{user.roleLabel}</span>
-            </button>
-          ))}
-        </div>
+        {centralizedMode ? (
+          <div className="demo-account-grid">
+            <article className="demo-account-card static">
+              <strong>Один Vercel URL</strong>
+              <span>Все сотрудники входят по одной ссылке.</span>
+              <span>Маршрут определяется ролью аккаунта.</span>
+            </article>
+            <article className="demo-account-card static">
+              <strong>Администратор</strong>
+              <span>Создает сотрудников, блокирует доступ и экспортирует CSV.</span>
+              <span>Обычные роли не видят статистику.</span>
+            </article>
+          </div>
+        ) : (
+          <div className="demo-account-grid">
+            {trainingUsers.map((user) => (
+              <button
+                className="demo-account-card"
+                key={user.id}
+                type="button"
+                onClick={() => {
+                  setEmail(user.email);
+                  setPassword("");
+                  setError("");
+                }}
+              >
+                <strong>{user.displayName}</strong>
+                <span>{user.email}</span>
+                <span>{user.roleLabel}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );
