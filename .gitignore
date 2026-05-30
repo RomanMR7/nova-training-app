@@ -3,6 +3,7 @@ dist/
 coverage/
 .tmp/
 .bun-cache/
+tsconfig.tsbuildinfo
 .env
 .env.*
 !.env.example

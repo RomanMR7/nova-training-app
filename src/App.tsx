@@ -331,7 +331,15 @@ function App() {
     <main className="app-shell">
       <header className="topbar">
         <button className="brand-button" type="button" onClick={() => setScreen("dashboard")}>
-          Nova Training
+          <img
+            alt=""
+            className="brand-mark small"
+            src="./anchor-pay-logo.png"
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+            }}
+          />
+          <span>Anchor Pay</span>
         </button>
         <div className="topbar-actions">
           <span className="account-badge">{currentUser.displayName}</span>

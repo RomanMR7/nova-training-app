@@ -72,6 +72,8 @@ export function ReferenceCenter({ currentUser, role, onBack }: ReferenceCenterPr
               playbook.responsibility,
               ...playbook.firstChecks,
               ...playbook.dailyTasks,
+              ...playbook.allowedActions,
+              ...playbook.commonMistakes,
               ...playbook.attentionStatuses,
               ...playbook.escalation
             ],
@@ -173,11 +175,12 @@ export function ReferenceCenter({ currentUser, role, onBack }: ReferenceCenterPr
       </div>
 
       <div className="section-heading">
-        <p className="eyebrow">Справочник сотрудника</p>
-        <h1 id="reference-title">Как работать в Nova</h1>
+        <p className="eyebrow">Навигационная карта</p>
+        <h1 id="reference-title">Справочник Anchor Pay</h1>
         <p>
           Быстрые ответы по ролям, статусам, процессам, спорным ситуациям и
-          безопасным действиям. Все примеры учебные.
+          безопасным действиям. Все примеры учебные и не влияют на реальные
+          деньги, пользователей или API.
         </p>
       </div>
 
@@ -240,7 +243,9 @@ export function ReferenceCenter({ currentUser, role, onBack }: ReferenceCenterPr
               <p>{playbook.responsibility}</p>
               <ReferenceList title="Что проверить после входа" items={playbook.firstChecks} />
               <ReferenceList title="Ежедневные задачи" items={playbook.dailyTasks} />
+              <ReferenceList title="Разрешенные действия" items={playbook.allowedActions} />
               <ReferenceList title="Что не делать" items={playbook.forbidden} />
+              <ReferenceList title="Типичные ошибки" items={playbook.commonMistakes} />
               <ReferenceList
                 title="Статусы с вниманием"
                 items={playbook.attentionStatuses}
@@ -354,9 +359,9 @@ export function ReferenceCenter({ currentUser, role, onBack }: ReferenceCenterPr
                 </div>
                 <p>{simulation.situation}</p>
                 <ReferenceList title="Задача" items={[simulation.task]} />
-                <ReferenceList title="Шаги ученика" items={simulation.steps} />
-                <section className="nested-section" aria-label="Варианты действий">
-                  <h3>Варианты действий</h3>
+                <ReferenceList title="Что изучить" items={simulation.steps} />
+                <section className="nested-section" aria-label="Доступные действия">
+                  <h3>Доступные действия</h3>
                   <ul className="choice-list">
                     {simulation.choices.map((choice) => (
                       <li

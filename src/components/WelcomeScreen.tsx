@@ -12,12 +12,24 @@ export function WelcomeScreen({
   return (
     <section className="welcome-screen" aria-labelledby="welcome-title">
       <div className="welcome-copy">
-        <p className="eyebrow">Статичный учебный контур</p>
-        <h1 id="welcome-title">Nova Training</h1>
+        <div className="brand-lockup large">
+          <img
+            alt=""
+            className="brand-mark"
+            src="./anchor-pay-logo.png"
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+            }}
+          />
+          <div>
+            <p className="eyebrow">Учебный тренажер</p>
+            <h1 id="welcome-title">Anchor Pay</h1>
+          </div>
+        </div>
         <p className="lead">
-          Интерактивное обучение сотрудников работе с платформой Nova:
-          роли, заявки, апелляции, ledger, аудит и мок-сценарии без
-          подключения к production.
+          Nautical-themed fintech training simulator: роли, заявки,
+          апелляции, ledger, аудит и учебные сценарии без реальных денег,
+          backend-вызовов или production-данных.
         </p>
         <div className="welcome-actions">
           <button className="primary-button" type="button" onClick={onStart}>
@@ -38,7 +50,7 @@ export function WelcomeScreen({
         </div>
         <div>
           <span className="metric">8</span>
-          <span>симуляторов</span>
+          <span>модульных симуляторов</span>
         </div>
         <div>
           <span className="metric">0</span>
@@ -48,4 +60,3 @@ export function WelcomeScreen({
     </section>
   );
 }
-

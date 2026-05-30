@@ -65,8 +65,8 @@ export function FinalCertificationQuiz({
       </div>
 
       <div className="section-heading">
-        <p className="eyebrow">Финальная сертификация</p>
-        <h1 id="cert-title">Проверка готовности</h1>
+        <p className="eyebrow">Финальная проверка</p>
+        <h1 id="cert-title">Учебный результат Anchor Pay</h1>
         <p>
           Ролевой экзамен проверяет сценарии, статусы, эскалации и безопасные
           действия. Результат сохраняется локально для текущего пользователя и
@@ -154,8 +154,8 @@ export function FinalCertificationQuiz({
           </p>
           <p>
             {score.percentage >= 80
-              ? "Сертификация пройдена. Можно переходить к практике под наблюдением."
-              : "Нужно повторить справочник, статусы и спорные сценарии перед практикой."}
+              ? "Учебная проверка пройдена. Следующий шаг — практика под наблюдением наставника."
+              : "Нужно повторить справочник, статусы и спорные сценарии, затем пройти проверку снова."}
           </p>
         </div>
       ) : null}
@@ -166,7 +166,7 @@ export function FinalCertificationQuiz({
         onClick={handleSubmit}
         disabled={Object.keys(answers).length < questions.length}
       >
-        Проверить сертификацию
+        Проверить учебный результат
       </button>
     </section>
   );
