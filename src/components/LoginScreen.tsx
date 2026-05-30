@@ -31,13 +31,30 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
     <main className="login-shell">
       <section className="login-panel" aria-labelledby="login-title">
         <div className="login-copy">
-          <p className="eyebrow">Локальный учебный вход</p>
-          <h1 id="login-title">Nova Training</h1>
+          <div className="brand-lockup large">
+            <img
+              alt=""
+              className="brand-mark"
+              src="./anchor-pay-logo.png"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
+            />
+            <div>
+              <p className="eyebrow">Учебный тренажер рабочего места</p>
+              <h1 id="login-title">Anchor Pay</h1>
+            </div>
+          </div>
           <p className="lead">
-            Это учебная авторизация только внутри браузера. Она не является
-            production-логином, не обращается к backend и не защищает реальные
-            данные.
+            Безопасная гавань для практики: роли, заявки, апелляции, ledger и
+            уведомления изучаются только на учебных данных. Нет реальных денег,
+            реальных API-вызовов или подключения к backend.
           </p>
+          <div className="safety-strip" aria-label="Ограничения тренажера">
+            <span>Локальный прогресс</span>
+            <span>Нет реальных платежей</span>
+            <span>Нет backend-вызовов</span>
+          </div>
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>
@@ -72,7 +89,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
 
       <section className="demo-accounts" aria-labelledby="demo-title">
         <div className="section-heading">
-          <p className="eyebrow">Demo accounts</p>
+          <p className="eyebrow">Учебные учетные записи</p>
           <h2 id="demo-title">Учебные аккаунты</h2>
           <p>
             Все аккаунты локальные. Пароль одинаковый: <strong>Training123!</strong>
@@ -100,4 +117,3 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
     </main>
   );
 }
-

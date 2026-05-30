@@ -1,24 +1,29 @@
-# Nova Training App
+# Anchor Pay Training App
 
-Standalone интерактивное обучение сотрудников работе с платформой Nova.
-Это отдельное статичное frontend-приложение, не связанное с `nova-platform`.
+Anchor Pay is a standalone nautical-themed fintech training simulator.
+It helps employees practice role-based workflows in a safe harbor: no real
+money, no real users, no real API calls, and no backend connection.
 
-## Что внутри
+This repository is separate from `nova-platform`. Do not connect it to the
+production platform or reuse production credentials.
+
+## What Is Inside
 
 - Vite + React + TypeScript.
-- Русский интерфейс по умолчанию.
-- Локальный учебный вход с demo-аккаунтами.
-- Ролевой доступ: администратор видит все маршруты, остальные роли видят только свой.
-- 15 учебных модулей, ролевые playbook, справочник статусов, карты процессов, кейсы и симуляции.
-- Ролевые финальные экзамены минимум по 10 вопросов на роль и общий экзамен для администратора.
-- Прогресс, квизы и сертификация сохраняются в `localStorage` по пользователю и роли.
-- Без backend, базы данных, Prisma, production auth, deployment-конфигов и реальных API.
+- Russian UI copy by default.
+- Dark graphite/navy Anchor Pay visual style with blue navigation accents and bronze/gold training highlights.
+- Local role-based training login.
+- Admin route switching across all roles.
+- Restricted role paths for support, merchant, trader, and provider.
+- 15 training modules, role playbooks, simulations, reference center, process maps, decision trees, cheat sheet, and final checks.
+- Progress, quiz scores, and final training results stored in `localStorage` by `email + role`.
+- Direct `index.html` fallback for opening the app without a dev server.
 
-## Demo training accounts
+## Training Accounts
 
-Это локальные учебные учетные записи только для тренажера. Это не production-авторизация и не модель безопасности.
+These accounts are local training accounts only. They are not production auth.
 
-| Роль | Email | Пароль |
+| Role | Email | Password |
 | --- | --- | --- |
 | Администратор | `admin@training.local` | `Training123!` |
 | Саппорт | `support@training.local` | `Training123!` |
@@ -26,80 +31,84 @@ Standalone интерактивное обучение сотрудников р
 | Трейдер | `trader@training.local` | `Training123!` |
 | Провайдер | `provider@training.local` | `Training123!` |
 
-## Ролевой доступ
+## Role Access
 
-- Администратор может переключаться между маршрутами администратора, саппорта, мерчанта, трейдера и провайдера.
-- Саппорт видит только обучение саппорта.
-- Мерчант видит только обучение мерчанта.
-- Трейдер видит только обучение трейдера.
-- Провайдер видит только обучение провайдера.
-- Если роль недоступна текущему demo-аккаунту, приложение показывает учебный экран `Доступ ограничен`.
+- Администратор can switch between every training route.
+- Саппорт sees only support materials.
+- Мерчант sees only merchant materials.
+- Трейдер sees only trader materials.
+- Провайдер sees only provider materials.
+- If a user tries to spoof another role, the app shows a training access-denied screen.
 
-## Установка
+## Install
 
 ```bash
 bun install
 ```
 
-## Локальный запуск
+## Run Locally
 
 ```bash
 bun run dev
 ```
 
-Vite покажет локальный адрес, обычно `http://127.0.0.1:5173/`.
+Vite usually prints `http://127.0.0.1:5173/`.
 
-Если зависимости еще не установлены, можно открыть исходный `index.html` двойным кликом. В этом режиме включается no-build fallback: он показывает локальный учебный вход, ролевые модули, подробные шаги, симуляции, глоссарий и шпаргалку. Полная интерактивность доступна через Vite.
+## Direct Index Fallback
 
-## Сборка
+You can open `index.html` directly. The fallback still shows Anchor Pay branding,
+local login, role-restricted modules, module details, simulations summary,
+reference material, and a short final training check.
+
+The fallback uses `public/anchor-pay-logo.png` if present and falls back to text
+branding if the image is missing.
+
+## Build
 
 ```bash
 bun run build
 ```
 
-Готовые статичные файлы будут в `dist/`.
+Static output is written to `dist/`.
 
-## Тесты
+## Test
 
 ```bash
 bun run test
 ```
 
-Проверяются рендер приложения, локальный вход, выбор роли, фильтрация модулей, подсчет квиза и сохранение прогресса.
+Tests cover local login, role filtering, quiz scoring, and progress persistence.
 
-## Как обновлять учебный контент
+## Updating Content
 
-Основной учебный контент находится в `src/training-content.ts`.
+- Main modules: `src/training-content.ts`.
+- Role playbooks, reference center, simulations, cases, and final exams: `src/reference-content.ts`.
+- Direct-open fallback: `src/static-fallback.js`.
+- Styling: `src/styles.css`.
 
-Дополнительные справочники, playbook, кейсы, симуляции и финальные экзамены находятся в `src/reference-content.ts`.
+Keep content practical and safe. Use mock objects, placeholders, and training
+language. Do not add real URLs, secrets, personal data, production credentials,
+or anything that implies actions move real money.
 
-Чтобы добавить или изменить модуль:
+## Local Progress
 
-1. Найдите массив `trainingModules`.
-2. Обновите `title`, `roles`, `explanation`, `steps`, `mistakes`, `checklist`.
-3. Обновите `quiz`.
-4. Если нужен модульный симулятор, добавьте `scenario`.
-5. Если меняется роль или экзамен, синхронизируйте `src/reference-content.ts` и упрощенный `src/static-fallback.js`.
+- Session and progress are stored in `localStorage`.
+- Progress is scoped by training account email and selected role.
+- `Сбросить прогресс` clears the current route.
+- `Сбросить все` clears all local Anchor Pay training data in the browser.
 
-Важно: оставляйте примеры моковыми. Не добавляйте реальные URL, секреты, персональные данные или production-инструкции.
+## Static Deploy
 
-## Прогресс и сброс
+After `bun run build`, deploy `dist/` to any static server such as Nginx, Apache,
+GitHub Pages, S3-compatible storage, CDN, or an internal file server.
 
-- Сессия demo-аккаунта хранится в `localStorage`.
-- Завершенные модули, результаты квизов и сертификации хранятся отдельно для `email + role`.
-- Кнопка `Сбросить прогресс` очищает текущий ролевой маршрут.
-- Кнопка `Сбросить все` очищает локальную demo-сессию и все учебные данные приложения.
+No backend is required.
 
-## Статический деплой
+## Intentionally Not Connected
 
-После `bun run build` можно раздать папку `dist/` любым статическим сервером: Nginx, Apache, S3-compatible storage, CDN, GitHub Pages или внутренний файловый сервер. Приложению не нужен backend.
-
-## Что намеренно не подключено к production
-
-- Нет вызовов backend `nova-platform`.
-- Нет реальных API endpoints.
-- Нет `fetch`/XHR к production-сервисам.
-- Нет базы данных, Prisma и миграций.
-- Нет production auth, настоящих пользователей и серверных сессий.
-- Нет секретов и персональных данных.
-- Нет реальных платежей, кошельков, уведомлений или интеграций Rapira.
+- No production backend.
+- No `nova-platform` backend calls.
+- No real API endpoints.
+- No `fetch` or XHR to production services.
+- No database, Prisma, migrations, auth server, or deployment config.
+- No secrets, real credentials, personal data, real payments, real wallets, or real notification integrations.

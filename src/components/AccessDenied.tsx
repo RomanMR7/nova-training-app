@@ -19,8 +19,8 @@ export function AccessDenied({ user, requestedRole, onBack }: AccessDeniedProps)
         {requestedRole ? ` Запрошенная роль: ${requestedRole}.` : ""}
       </p>
       <p>
-        Это локальное учебное ограничение. Для production-доступа оно не
-        используется и не заменяет настоящую авторизацию.
+        Это локальное учебное ограничение Anchor Pay. Оно помогает отработать
+        границы роли в тренажере и не является настоящей авторизацией.
       </p>
       <button className="primary-button" type="button" onClick={onBack}>
         Вернуться к доступному обучению

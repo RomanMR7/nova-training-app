@@ -36,8 +36,8 @@ export function FinalResult({ role, modules, progress, onBack }: FinalResultProp
         <p className="eyebrow">Итоги</p>
         <h1 id="final-title">Прогресс обучения</h1>
         <p>
-          Сводка хранится локально в браузере и не отправляется во внешние
-          сервисы.
+          Сводка Anchor Pay хранится локально в браузере и не отправляется во
+          внешние сервисы.
         </p>
       </div>
 
@@ -60,7 +60,7 @@ export function FinalResult({ role, modules, progress, onBack }: FinalResultProp
           <span className="metric">
             {progress.finalQuizScore ? `${progress.finalQuizScore.percentage}%` : "0%"}
           </span>
-          <span>финальная сертификация</span>
+          <span>финальная проверка</span>
         </div>
       </div>
 

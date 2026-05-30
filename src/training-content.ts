@@ -109,7 +109,7 @@ function practicalSteps(guide: PracticalStepsGuide): string[] {
   ];
 }
 
-// TODO: заменить учебные названия экранов и карточек на точные UI-labels Nova,
+// TODO: заменить учебные названия экранов и карточек на точные UI-labels Anchor Pay,
 // когда финальные тренировочные макеты будут утверждены владельцами продукта.
 const practicalStepsByModuleId: Record<string, string[]> = {
   "platform-overview": practicalSteps({
@@ -498,7 +498,7 @@ export const trainingModules: TrainingModule[] = [
     title: "Обзор площадки",
     roles: allRoles,
     explanation:
-      "Nova помогает участникам операционного процесса видеть заявки, роли, балансы, апелляции и аудит в одном рабочем контуре. В тренажере показаны только учебные данные.",
+      "Anchor Pay показывает учебный рабочий контур: роли, заявки, балансы, апелляции и аудит в одном безопасном тренажере. Здесь используются только учебные данные.",
     steps: practicalStepsByModuleId["platform-overview"],
     mistakes: [
       "Считать учебный пример реальной заявкой.",
@@ -628,7 +628,7 @@ export const trainingModules: TrainingModule[] = [
         "merchant-api-2",
         "Куда ведет /mock-api/payments в тренажере?",
         "Никуда, это учебный пример",
-        "В боевой API Nova",
+        "В боевой API",
         "В приложении нет сетевых вызовов и реальных endpoint."
       )
     ],

@@ -32,6 +32,11 @@ export function Dashboard({
   ).length;
   const percent =
     modules.length === 0 ? 0 : Math.round((completedCount / modules.length) * 100);
+  const remainingCount = Math.max(modules.length - completedCount, 0);
+  const nextModule = modules.find(
+    (module) => !progress.completedModules.includes(module.id)
+  );
+  const scenarioModules = modules.filter((module) => module.scenario);
   const visibleModules = useMemo(
     () =>
       modules.filter((module) => {
@@ -57,11 +62,11 @@ export function Dashboard({
     <section className="screen-stack" aria-labelledby="dashboard-title">
       <div className="dashboard-hero">
         <div>
-          <p className="eyebrow">Учебный дашборд</p>
-          <h1 id="dashboard-title">План обучения</h1>
+          <p className="eyebrow">Anchor Pay training simulator</p>
+          <h1 id="dashboard-title">Учебная смена</h1>
           <p>
-            Показаны модули для роли <strong>{role}</strong>. Все сценарии
-            работают только с мок-данными.
+            Рабочий маршрут для роли <strong>{role}</strong>. Все операции
+            учебные: без реальных денег, пользователей, API-вызовов и backend.
           </p>
         </div>
         <div className="dashboard-actions">
@@ -74,7 +79,7 @@ export function Dashboard({
             Справочник
           </button>
           <button className="secondary-button" type="button" onClick={onOpenCertification}>
-            Сертификация
+            Финальная проверка
           </button>
           <button className="primary-button" type="button" onClick={onOpenFinal}>
             Итоги
@@ -82,17 +87,72 @@ export function Dashboard({
         </div>
       </div>
 
-      <div className="progress-panel" aria-label="Прогресс обучения">
+      <section className="dashboard-section today-panel" aria-labelledby="today-title">
+        <div className="section-heading">
+          <p className="eyebrow">Сегодня в обучении</p>
+          <h2 id="today-title">Безопасная практика в учебной гавани</h2>
+          <p>
+            Начните с следующего модуля, затем закрепите решение в симуляции и
+            проверьте себя в финальной проверке.
+          </p>
+        </div>
+        <div className="today-grid">
+          <article className="dock-card">
+            <span className="metric">{remainingCount}</span>
+            <span>модулей осталось</span>
+          </article>
+          <article className="dock-card">
+            <span className="metric">{scenarioModules.length}</span>
+            <span>симуляций доступно</span>
+          </article>
+          <article className="dock-card">
+            <span className="metric">{percent}%</span>
+            <span>прогресс маршрута</span>
+          </article>
+          <article className="dock-card next-card">
+            <strong>{nextModule?.title ?? "Маршрут закрыт"}</strong>
+            <span>
+              {nextModule
+                ? "Следующий учебный модуль по роли"
+                : "Можно перейти к повторению и финальной проверке"}
+            </span>
+            {nextModule ? (
+              <button
+                className="primary-button"
+                type="button"
+                onClick={() => onOpenModule(nextModule.id)}
+              >
+                Открыть модуль
+              </button>
+            ) : (
+              <button className="primary-button" type="button" onClick={onOpenCertification}>
+                Финальная проверка
+              </button>
+            )}
+          </article>
+        </div>
+      </section>
+
+      <section className="dashboard-section progress-panel" aria-label="Прогресс">
         <div className="progress-label">
-          <span>{completedCount} из {modules.length} модулей завершено</span>
-          <strong>{percent}%</strong>
+          <span>Прогресс</span>
+          <strong>{completedCount} из {modules.length} модулей</strong>
         </div>
         <div className="progress-track" aria-hidden="true">
           <span style={{ width: `${percent}%` }} />
         </div>
-      </div>
+      </section>
 
-      <div className="reference-toolbar">
+      <section className="dashboard-section" aria-labelledby="route-title">
+        <div className="module-card-head">
+          <div>
+            <p className="eyebrow">Мой маршрут</p>
+            <h2 id="route-title">Учебные модули роли</h2>
+          </div>
+          <span className="role-badge">{role}</span>
+        </div>
+
+        <div className="reference-toolbar">
         <label>
           <span>Поиск по модулям</span>
           <input
@@ -118,59 +178,83 @@ export function Dashboard({
         </label>
       </div>
 
-      <div className="quick-link-grid" aria-label="Быстрые ссылки">
+        <div className="module-grid">
+          {visibleModules.map((module) => {
+            const completed = progress.completedModules.includes(module.id);
+            const quizScore = progress.quizScores[module.id];
+
+            return (
+              <article className="module-card" key={module.id}>
+                <div className="module-card-head">
+                  <span className={`status-pill ${completed ? "done" : ""}`}>
+                    {completed ? "Завершен" : "В плане"}
+                  </span>
+                  {module.scenario ? <span className="status-pill">Сценарий</span> : null}
+                </div>
+                <h2>{module.title}</h2>
+                <p>{module.explanation}</p>
+                <div className="module-meta">
+                  <span>{module.quiz.length} вопроса</span>
+                  <span>
+                    {quizScore ? `Квиз: ${quizScore.percentage}%` : "Квиз не пройден"}
+                  </span>
+                </div>
+                <button
+                  className="secondary-button full-width"
+                  type="button"
+                  onClick={() => onOpenModule(module.id)}
+                >
+                  Открыть модуль
+                </button>
+              </article>
+            );
+          })}
+        </div>
+        {visibleModules.length === 0 ? (
+          <div className="content-panel" role="status">
+            <h2>Ничего не найдено</h2>
+            <p>Измените поисковый запрос или фильтр модулей.</p>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="dashboard-section" aria-labelledby="sim-title">
+        <div className="module-card-head">
+          <div>
+            <p className="eyebrow">Практические симуляции</p>
+            <h2 id="sim-title">Решения без риска для денег и данных</h2>
+          </div>
+          <span className="status-pill">{scenarioModules.length} сценариев</span>
+        </div>
+        <div className="simulation-strip">
+          {scenarioModules.slice(0, 4).map((module) => (
+            <button
+              className="simulation-teaser"
+              key={module.id}
+              type="button"
+              onClick={() => onOpenModule(module.id)}
+            >
+              <strong>{module.scenario?.title ?? module.title}</strong>
+              <span>{module.title}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="dashboard-section action-harbor" aria-label="Справочник и финальная проверка">
         <button className="quick-link" type="button" onClick={onOpenReference}>
-          <strong>Статусы и процессы</strong>
-          <span>Глоссарий, карты процессов, деревья решений</span>
-        </button>
-        <button className="quick-link" type="button" onClick={onOpenReference}>
-          <strong>Кейсы и шпаргалка</strong>
-          <span>10 мок-ситуаций и правила безопасности</span>
+          <strong>Справочник</strong>
+          <span>Статусы, роли, процессы, ошибки, эскалации и шпаргалка</span>
         </button>
         <button className="quick-link" type="button" onClick={onOpenCertification}>
-          <strong>Финальный квиз</strong>
-          <span>Ролевой экзамен, результат сохраняется локально</span>
+          <strong>Финальная проверка</strong>
+          <span>Ролевой учебный результат сохраняется локально</span>
         </button>
-      </div>
-
-      <div className="module-grid">
-        {visibleModules.map((module) => {
-          const completed = progress.completedModules.includes(module.id);
-          const quizScore = progress.quizScores[module.id];
-
-          return (
-            <article className="module-card" key={module.id}>
-              <div className="module-card-head">
-                <span className={`status-pill ${completed ? "done" : ""}`}>
-                  {completed ? "Завершен" : "В плане"}
-                </span>
-                {module.scenario ? <span className="status-pill">Сценарий</span> : null}
-              </div>
-              <h2>{module.title}</h2>
-              <p>{module.explanation}</p>
-              <div className="module-meta">
-                <span>{module.quiz.length} вопроса</span>
-                <span>
-                  {quizScore ? `Квиз: ${quizScore.percentage}%` : "Квиз не пройден"}
-                </span>
-              </div>
-              <button
-                className="secondary-button full-width"
-                type="button"
-                onClick={() => onOpenModule(module.id)}
-              >
-                Открыть модуль
-              </button>
-            </article>
-          );
-        })}
-      </div>
-      {visibleModules.length === 0 ? (
-        <div className="content-panel" role="status">
-          <h2>Ничего не найдено</h2>
-          <p>Измените поисковый запрос или фильтр модулей.</p>
-        </div>
-      ) : null}
+        <button className="quick-link" type="button" onClick={onOpenFinal}>
+          <strong>Прогресс</strong>
+          <span>Завершенные модули, квизы, симуляции и результат проверки</span>
+        </button>
+      </section>
     </section>
   );
 }

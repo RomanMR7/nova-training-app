@@ -104,7 +104,7 @@
   }
 
   var fallbackCertification = [
-    q("fallback-cert-1", "Что означает локальный учебный вход?", "Это demo-вход только в браузере без production auth", "Это настоящая авторизация Nova", "Fallback не обращается к backend и хранит только учебные данные."),
+    q("fallback-cert-1", "Что означает локальный учебный вход?", "Это учебный вход только в браузере без настоящей авторизации", "Это настоящая авторизация Anchor Pay", "Тренажер не обращается к backend и хранит только учебные данные."),
     q("fallback-cert-2", "Что делать, если роль недоступна?", "Вернуться к доступному маршруту или эскалировать доступ администратору", "Изменить localStorage и продолжить", "Ролевые ограничения сохраняют ответственность."),
     q("fallback-cert-3", "Можно ли добавлять реальные API URL?", "Нет, используются только mock/placeholder примеры", "Да, если это ускоряет обучение", "Тренажер не должен содержать production endpoints."),
     q("fallback-cert-4", "Что проверять после учебного действия?", "Новый статус, сообщение и учебный след", "Только цвет кнопки", "Результат должен быть проверяемым."),
@@ -125,7 +125,7 @@
     ];
   }
 
-  // TODO: заменить учебные названия экранов и карточек на точные UI-labels Nova,
+  // TODO: заменить учебные названия экранов и карточек на точные UI-labels Anchor Pay,
   // когда финальные тренировочные макеты будут утверждены владельцами продукта.
   var moduleSteps = {
     "platform-overview": practicalSteps(
@@ -458,7 +458,7 @@
   }
 
   var modules = [
-    module("platform-overview", "Обзор площадки", ALL, "Краткий обзор рабочих разделов Nova: роли, заявки, балансы, аудит и спорные ситуации."),
+    module("platform-overview", "Обзор площадки", ALL, "Краткий обзор учебных разделов Anchor Pay: роли, заявки, балансы, аудит и спорные ситуации."),
     module("roles-rights", "Роли и права", ALL, "Роли ограничивают видимость и действия, чтобы сотрудники работали в границах ответственности."),
     module("teams-organizations", "Команды и организации", ["Администратор", "Саппорт", "Провайдер"], "Команды и организации разделяют операционные контуры, настройки и ответственность."),
     module("merchants-api", "Мерчанты и API", ["Администратор", "Мерчант", "Саппорт"], "Мерчант изучает API-ключи и примеры запросов без реальных endpoints.", {
@@ -879,9 +879,9 @@
       '<main class="login-shell">' +
       '<section class="login-panel" aria-labelledby="login-title">' +
       '<div class="login-copy">' +
-      '<p class="eyebrow">Локальный учебный вход</p>' +
-      '<h1 id="login-title">Nova Training</h1>' +
-      '<p class="lead">Это учебный локальный вход для режима открытия index.html напрямую. Он не является production-авторизацией, не обращается к backend и не защищает реальные данные.</p>' +
+      '<div class="brand-lockup large"><img alt="" class="brand-mark" src="./public/anchor-pay-logo.png" onerror="this.style.display=&quot;none&quot;"><div><p class="eyebrow">Учебный тренажер рабочего места</p><h1 id="login-title">Anchor Pay</h1></div></div>' +
+      '<p class="lead">Надежная учебная гавань для практики ролей, заявок, апелляций, ledger и уведомлений. Нет реальных денег, реальных API-вызовов или подключения к backend.</p>' +
+      '<div class="safety-strip" aria-label="Ограничения тренажера"><span>Локальный прогресс</span><span>Нет реальных платежей</span><span>Нет backend-вызовов</span></div>' +
       "</div>" +
       '<form class="login-form" id="fallback-login-form">' +
       '<label><span>Email</span><input id="fallback-email" type="email" autocomplete="username" value="trader@training.local"></label>' +
@@ -891,7 +891,7 @@
       "</form>" +
       "</section>" +
       '<section class="demo-accounts" aria-labelledby="fallback-demo-title">' +
-      '<div class="section-heading"><p class="eyebrow">Demo accounts</p><h2 id="fallback-demo-title">Учебные аккаунты</h2><p>Все аккаунты локальные. Пароль одинаковый: <strong>Training123!</strong></p></div>' +
+      '<div class="section-heading"><p class="eyebrow">Учебные учетные записи</p><h2 id="fallback-demo-title">Учебные аккаунты</h2><p>Все аккаунты локальные. Пароль одинаковый: <strong>Training123!</strong></p></div>' +
       '<div class="demo-account-grid">' +
       trainingUsers.map(function (user) {
         return (
@@ -915,7 +915,7 @@
       '<p>Аккаунт может проходить только роли: <strong>' + escapeHtml(allowed) + "</strong>." +
       (role ? " Запрошенная роль: " + escapeHtml(role) + "." : "") +
       "</p>" +
-      '<p>Это локальное учебное ограничение fallback-версии. Оно не заменяет production-авторизацию.</p>' +
+      '<p>Это локальное учебное ограничение Anchor Pay. Оно помогает отработать границы роли и не является настоящей авторизацией.</p>' +
       '<button class="primary-button" type="button" data-action="default-role">Вернуться к доступному обучению</button>' +
       "</section>"
     );
@@ -928,7 +928,7 @@
     root.innerHTML =
       '<main class="app-shell">' +
       '<header class="topbar">' +
-      '<button class="brand-button" type="button" data-action="dashboard">Nova Training</button>' +
+      '<button class="brand-button" type="button" data-action="dashboard"><img alt="" class="brand-mark small" src="./public/anchor-pay-logo.png" onerror="this.style.display=&quot;none&quot;"><span>Anchor Pay</span></button>' +
       '<div class="topbar-actions">' +
       (user ? '<span class="account-badge">' + escapeHtml(user.displayName) + "</span>" : "") +
       (progress.selectedRole ? '<span class="role-badge">' + escapeHtml(progress.selectedRole) + "</span>" : "") +
@@ -947,9 +947,8 @@
     renderShell(
       '<section class="welcome-screen" aria-labelledby="welcome-title">' +
       '<div class="welcome-copy">' +
-      '<p class="eyebrow">Статичный учебный контур</p>' +
-      '<h1 id="welcome-title">Nova Training</h1>' +
-      '<p class="lead">Интерактивное обучение сотрудников работе с платформой Nova: роли, заявки, апелляции, ledger, аудит и мок-сценарии без подключения к production.</p>' +
+      '<div class="brand-lockup large"><img alt="" class="brand-mark" src="./public/anchor-pay-logo.png" onerror="this.style.display=&quot;none&quot;"><div><p class="eyebrow">Учебный тренажер</p><h1 id="welcome-title">Anchor Pay</h1></div></div>' +
+      '<p class="lead">Nautical-themed fintech training simulator: роли, заявки, апелляции, ledger, аудит и учебные сценарии без реальных денег, backend-вызовов или production-данных.</p>' +
       '<div class="welcome-actions">' +
       '<button class="primary-button" type="button" data-action="roles">Начать обучение</button>' +
       '<button class="secondary-button" type="button" data-action="reference">Справочник</button>' +
@@ -1005,13 +1004,18 @@
       return progress.completedModules.indexOf(item.id) >= 0;
     }).length;
     var percent = visible.length ? Math.round((completed / visible.length) * 100) : 0;
+    var scenarioCount = visible.filter(function (item) {
+      return item.scenario;
+    }).length;
 
     renderShell(
       '<section class="screen-stack" aria-labelledby="dashboard-title">' +
-      '<div class="dashboard-hero"><div><p class="eyebrow">Учебный дашборд</p><h1 id="dashboard-title">План обучения</h1><p>Показаны модули для роли <strong>' + escapeHtml(progress.selectedRole) + "</strong>. Все сценарии работают только с мок-данными.</p></div>" +
-      '<div class="dashboard-actions">' + (user && user.accessibleRoles.length > 1 ? '<button class="secondary-button" type="button" data-action="roles">Сменить роль</button>' : "") + '<button class="secondary-button" type="button" data-action="reference">Справочник</button><button class="secondary-button" type="button" data-action="certification">Сертификация</button><button class="primary-button" type="button" data-action="final">Итоги</button></div></div>' +
-      '<div class="quick-link-grid" aria-label="Быстрые ссылки"><button class="quick-link" type="button" data-action="reference"><strong>Статусы и шпаргалка</strong><span>Глоссарий, роли и безопасные действия</span></button><button class="quick-link" type="button" data-action="reference"><strong>Что эскалировать</strong><span>К саппорту, администратору или владельцу роли</span></button><button class="quick-link" type="button" data-action="certification"><strong>Финальная проверка</strong><span>Короткая fallback-сертификация с сохранением результата</span></button></div>' +
-      '<div class="progress-panel" aria-label="Прогресс обучения"><div class="progress-label"><span>' + completed + " из " + visible.length + " модулей завершено</span><strong>" + percent + "%</strong></div><div class=\"progress-track\" aria-hidden=\"true\"><span style=\"width:" + percent + '%"></span></div></div>' +
+      '<div class="dashboard-hero"><div><p class="eyebrow">Anchor Pay training simulator</p><h1 id="dashboard-title">Учебная смена</h1><p>Рабочий маршрут для роли <strong>' + escapeHtml(progress.selectedRole) + "</strong>. Все операции учебные: без реальных денег, пользователей, API-вызовов и backend.</p></div>" +
+      '<div class="dashboard-actions">' + (user && user.accessibleRoles.length > 1 ? '<button class="secondary-button" type="button" data-action="roles">Сменить роль</button>' : "") + '<button class="secondary-button" type="button" data-action="reference">Справочник</button><button class="secondary-button" type="button" data-action="certification">Финальная проверка</button><button class="primary-button" type="button" data-action="final">Итоги</button></div></div>' +
+      '<section class="dashboard-section today-panel"><div class="section-heading"><p class="eyebrow">Сегодня в обучении</p><h2>Безопасная практика в учебной гавани</h2><p>Откройте модуль, закрепите решение в симуляции и сохраните результат локально.</p></div><div class="today-grid"><article class="dock-card"><span class="metric">' + (visible.length - completed) + '</span><span>модулей осталось</span></article><article class="dock-card"><span class="metric">' + scenarioCount + '</span><span>симуляций доступно</span></article><article class="dock-card"><span class="metric">' + percent + '%</span><span>прогресс маршрута</span></article></div></section>' +
+      '<div class="progress-panel dashboard-section" aria-label="Прогресс обучения"><div class="progress-label"><span>Прогресс</span><strong>' + completed + " из " + visible.length + " модулей</strong></div><div class=\"progress-track\" aria-hidden=\"true\"><span style=\"width:" + percent + '%"></span></div></div>' +
+      '<div class="quick-link-grid action-harbor" aria-label="Быстрые ссылки"><button class="quick-link" type="button" data-action="reference"><strong>Справочник</strong><span>Статусы, процессы, ошибки, эскалации и шпаргалка</span></button><button class="quick-link" type="button" data-action="certification"><strong>Финальная проверка</strong><span>Короткая fallback-проверка с сохранением результата</span></button><button class="quick-link" type="button" data-action="final"><strong>Прогресс</strong><span>Модули, квизы и учебный результат</span></button></div>' +
+      '<section class="dashboard-section"><div class="module-card-head"><div><p class="eyebrow">Мой маршрут</p><h2>Учебные модули роли</h2></div><span class="role-badge">' + escapeHtml(progress.selectedRole) + "</span></div>" +
       '<div class="module-grid">' +
       visible.map(function (item) {
         var done = progress.completedModules.indexOf(item.id) >= 0;
@@ -1028,7 +1032,7 @@
           "</article>"
         );
       }).join("") +
-      "</div></section>"
+      "</div></section></section>"
     );
   }
 
@@ -1146,7 +1150,7 @@
     renderShell(
       '<section class="screen-stack" aria-labelledby="cert-title">' +
       '<div class="module-header"><button class="ghost-button" type="button" data-action="dashboard">К дашборду</button>' + (score ? '<span class="status-pill done">' + score.percentage + "%</span>" : "") + "</div>" +
-      '<div class="section-heading"><p class="eyebrow">Fallback сертификация</p><h1 id="cert-title">Финальная проверка</h1><p>Короткая проверка для режима прямого открытия index.html. Полный ролевой экзамен доступен в Vite-версии.</p></div>' +
+      '<div class="section-heading"><p class="eyebrow">Финальная проверка</p><h1 id="cert-title">Учебный результат Anchor Pay</h1><p>Короткая проверка для режима прямого открытия index.html. Полный ролевой экзамен доступен при запуске через Vite.</p></div>' +
       '<div class="quiz-list">' +
       fallbackCertification.map(function (question, index) {
         return (
@@ -1159,8 +1163,8 @@
         );
       }).join("") +
       "</div>" +
-      (state.certScore ? '<div class="result-panel" role="status"><h2>Результат сертификации</h2><p>Верно ' + state.certScore.correct + " из " + state.certScore.total + ". Итог: " + state.certScore.percentage + "%.</p></div>" : "") +
-      '<button class="primary-button" type="button" data-action="cert-submit"' + (Object.keys(state.certAnswers).length < fallbackCertification.length ? " disabled" : "") + ">Проверить сертификацию</button>" +
+      (state.certScore ? '<div class="result-panel" role="status"><h2>Учебный результат</h2><p>Верно ' + state.certScore.correct + " из " + state.certScore.total + ". Итог: " + state.certScore.percentage + "%.</p></div>" : "") +
+      '<button class="primary-button" type="button" data-action="cert-submit"' + (Object.keys(state.certAnswers).length < fallbackCertification.length ? " disabled" : "") + ">Проверить учебный результат</button>" +
       "</section>"
     );
   }
@@ -1186,8 +1190,8 @@
     renderShell(
       '<section class="screen-stack" aria-labelledby="final-title">' +
       '<div class="module-header"><button class="ghost-button" type="button" data-action="dashboard">К дашборду</button><span class="role-badge">' + escapeHtml(progress.selectedRole) + "</span></div>" +
-      '<div class="section-heading"><p class="eyebrow">Итоги</p><h1 id="final-title">Прогресс обучения</h1><p>Сводка хранится локально и не отправляется во внешние сервисы.</p></div>' +
-      '<div class="result-grid"><div class="result-card"><span class="metric">' + completed.length + "</span><span>завершено из " + visible.length + '</span></div><div class="result-card"><span class="metric">' + average + '%</span><span>средний результат квизов</span></div><div class="result-card"><span class="metric">' + visible.filter(function (item) { return item.scenario; }).length + '</span><span>доступных симуляторов</span></div><div class="result-card"><span class="metric">' + (progress.finalQuizScore ? progress.finalQuizScore.percentage + "%" : "0%") + '</span><span>сертификация</span></div></div>' +
+      '<div class="section-heading"><p class="eyebrow">Итоги</p><h1 id="final-title">Прогресс Anchor Pay</h1><p>Сводка хранится локально и не отправляется во внешние сервисы.</p></div>' +
+      '<div class="result-grid"><div class="result-card"><span class="metric">' + completed.length + "</span><span>завершено из " + visible.length + '</span></div><div class="result-card"><span class="metric">' + average + '%</span><span>средний результат квизов</span></div><div class="result-card"><span class="metric">' + visible.filter(function (item) { return item.scenario; }).length + '</span><span>доступных симуляторов</span></div><div class="result-card"><span class="metric">' + (progress.finalQuizScore ? progress.finalQuizScore.percentage + "%" : "0%") + '</span><span>финальная проверка</span></div></div>' +
       '<section class="content-panel"><h2>Завершенные модули</h2>' +
       (completed.length ? '<ul class="check-list">' + completed.map(function (item) { return "<li>" + escapeHtml(item.title) + "</li>"; }).join("") + "</ul>" : "<p>Пока нет завершенных модулей.</p>") +
       "</section></section>"
@@ -1205,8 +1209,8 @@
     });
     renderShell(
       '<section class="screen-stack" aria-labelledby="reference-title">' +
-      '<div class="module-header"><button class="ghost-button" type="button" data-action="dashboard">Назад</button><span class="status-pill">Fallback</span></div>' +
-      '<div class="section-heading"><p class="eyebrow">Справочник сотрудника</p><h1 id="reference-title">Статусы, симуляции и шпаргалка</h1><p>Короткая справка для режима открытия index.html напрямую. Материалы по кейсам и симуляциям фильтруются по учебной роли.</p></div>' +
+      '<div class="module-header"><button class="ghost-button" type="button" data-action="dashboard">Назад</button><span class="status-pill">Прямое открытие</span></div>' +
+      '<div class="section-heading"><p class="eyebrow">Навигационная карта</p><h1 id="reference-title">Справочник Anchor Pay</h1><p>Короткая справка для режима открытия index.html напрямую. Материалы по кейсам и симуляциям фильтруются по учебной роли.</p></div>' +
       '<div class="reference-grid">' +
       visibleSimulations.map(function (simulation) {
         return '<article class="reference-card simulation-card"><div class="module-card-head"><h2>' + escapeHtml(simulation[1]) + '</h2><span class="role-badge">' + escapeHtml(simulation[0]) + '</span></div><p>' + escapeHtml(simulation[2]) + '</p></article>';

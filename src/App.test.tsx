@@ -22,8 +22,8 @@ describe("App", () => {
   it("renders the local login screen", () => {
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: "Nova Training" })).toBeInTheDocument();
-    expect(screen.getByText(/учебная авторизация только внутри браузера/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Anchor Pay" })).toBeInTheDocument();
+    expect(screen.getByText(/Нет реальных денег/i)).toBeInTheDocument();
   });
 
   it("allows admin to switch role training paths", async () => {
