@@ -101,7 +101,7 @@ export function Dashboard({
       <section className="dashboard-section today-panel" aria-labelledby="today-title">
         <div className="section-heading">
           <p className="eyebrow">Сегодня в обучении</p>
-          <h2 id="today-title">Безопасная практика в учебной гавани</h2>
+          <h2 id="today-title">Безопасная практика PSP-процессов</h2>
           <p>
             Начните с следующего модуля, затем закрепите решение в симуляции и
             проверьте себя в финальной проверке.
@@ -168,7 +168,7 @@ export function Dashboard({
           <span>Поиск по модулям</span>
           <input
             aria-label="Поиск по модулям"
-            placeholder="ledger, апелляция, webhook, статус..."
+            placeholder="verification, shop, device, api_key..."
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}

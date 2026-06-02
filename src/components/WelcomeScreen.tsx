@@ -27,9 +27,9 @@ export function WelcomeScreen({
           </div>
         </div>
         <p className="lead">
-          Nautical-themed fintech training simulator: роли, заявки,
-          апелляции, ledger, аудит и учебные сценарии без реальных денег,
-          backend-вызовов или production-данных.
+          PSP training simulator: роли, verification, teamlead-команды,
+          trader-команды, shop, requisites, api_key и orders без реальных
+          денег, backend-вызовов или production-данных.
         </p>
         <div className="welcome-actions">
           <button className="primary-button" type="button" onClick={onStart}>
@@ -45,11 +45,11 @@ export function WelcomeScreen({
 
       <div className="overview-panel" aria-label="Что входит в обучение">
         <div>
-          <span className="metric">15</span>
+          <span className="metric">8</span>
           <span>модулей</span>
         </div>
         <div>
-          <span className="metric">8</span>
+          <span className="metric">6</span>
           <span>модульных симуляторов</span>
         </div>
         <div>

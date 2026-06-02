@@ -189,7 +189,7 @@ export function ReferenceCenter({ currentUser, role, onBack }: ReferenceCenterPr
           <span>Поиск</span>
           <input
             aria-label="Поиск по справочнику"
-            placeholder="Статус, роль, webhook, ledger..."
+            placeholder="Статус, роль, shop, device, api_key..."
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
