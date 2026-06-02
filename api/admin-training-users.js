@@ -1,4 +1,13 @@
-const roles = new Set(["admin", "support", "merchant", "trader", "provider"]);
+const roles = new Set([
+  "admin",
+  "teamlead_manager",
+  "trader_manager",
+  "trader",
+  "merchant",
+  "merchant_manager",
+  "head_support",
+  "support"
+]);
 
 function json(response, status = 200) {
   return new Response(JSON.stringify(response), {

@@ -67,9 +67,10 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             </div>
           </div>
           <p className="lead">
-            Безопасная гавань для практики: роли, заявки, апелляции, ledger и
-            уведомления изучаются только на учебных данных. Нет реальных денег,
-            реальных платежных API или подключения к production-системам.
+            Учебная среда для PSP-процессов: роли, verification, teamlead- и
+            trader-команды, shop, requisites, api_key и orders изучаются только
+            на учебных данных. Нет реальных денег, реальных платежных API или
+            подключения к production-системам.
           </p>
           <div className="safety-strip" aria-label="Ограничения тренажера">
             <span>{getSupabaseModeLabel()}</span>
@@ -78,7 +79,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           </div>
           <div className={`mode-note ${centralizedMode ? "positive" : "warning"}`}>
             {centralizedMode
-              ? "Вход идет через Supabase Auth. Администратор создает учебные аккаунты и видит статистику по сотрудникам."
+              ? "Вход идет через Supabase Auth. ADMIN создает учебные аккаунты и видит статистику по сотрудникам."
               : "Supabase env не задан. Сейчас включен offline demo: локальные аккаунты и прогресс только в этом браузере."}
           </div>
         </div>
@@ -135,7 +136,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               <span>Маршрут определяется ролью аккаунта.</span>
             </article>
             <article className="demo-account-card static">
-              <strong>Администратор</strong>
+              <strong>ADMIN</strong>
               <span>Создает сотрудников, блокирует доступ и экспортирует CSV.</span>
               <span>Обычные роли не видят статистику.</span>
             </article>

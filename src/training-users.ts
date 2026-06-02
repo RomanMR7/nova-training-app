@@ -1,6 +1,14 @@
 import type { Role } from "./training-content";
 
-export type TrainingRoleId = "admin" | "support" | "merchant" | "trader" | "provider";
+export type TrainingRoleId =
+  | "admin"
+  | "teamlead_manager"
+  | "trader_manager"
+  | "trader"
+  | "merchant"
+  | "merchant_manager"
+  | "head_support"
+  | "support";
 
 export interface TrainingUser {
   id: string;
@@ -26,74 +34,110 @@ export type TrainingSessionUser = Omit<TrainingUser, "password"> & {
 };
 
 export const roleIdToLabel: Record<TrainingRoleId, Role> = {
-  admin: "Администратор",
-  support: "Саппорт",
-  merchant: "Мерчант",
-  trader: "Трейдер",
-  provider: "Провайдер"
+  admin: "ADMIN",
+  teamlead_manager: "TEAMLEAD_MANAGER",
+  trader_manager: "TRADER_MANAGER",
+  trader: "TRADER",
+  merchant: "MERCHANT",
+  merchant_manager: "MERCHANT_MANAGER",
+  head_support: "HEAD_SUPPORT",
+  support: "SUPPORT"
 };
 
 export const roleLabelToId: Record<Role, TrainingRoleId> = {
-  Администратор: "admin",
-  Саппорт: "support",
-  Мерчант: "merchant",
-  Трейдер: "trader",
-  Провайдер: "provider"
+  ADMIN: "admin",
+  TEAMLEAD_MANAGER: "teamlead_manager",
+  TRADER_MANAGER: "trader_manager",
+  TRADER: "trader",
+  MERCHANT: "merchant",
+  MERCHANT_MANAGER: "merchant_manager",
+  HEAD_SUPPORT: "head_support",
+  SUPPORT: "support"
 };
 
 const allTrainingRoleIds: TrainingRoleId[] = [
   "admin",
-  "support",
-  "merchant",
+  "teamlead_manager",
+  "trader_manager",
   "trader",
-  "provider"
+  "merchant",
+  "merchant_manager",
+  "head_support",
+  "support"
 ];
 
 export const trainingUsers: TrainingUser[] = [
   {
     id: "training-admin",
     email: "admin@training.local",
-    displayName: "Учебный администратор",
+    displayName: "Учебный ADMIN",
     role: "admin",
-    roleLabel: "Администратор",
+    roleLabel: "ADMIN",
     password: "Training123!",
     accessibleRoles: allTrainingRoleIds
   },
   {
-    id: "training-support",
-    email: "support@training.local",
-    displayName: "Учебный саппорт",
-    role: "support",
-    roleLabel: "Саппорт",
+    id: "training-teamlead-manager",
+    email: "teamlead.manager@training.local",
+    displayName: "Учебный TEAMLEAD_MANAGER",
+    role: "teamlead_manager",
+    roleLabel: "TEAMLEAD_MANAGER",
     password: "Training123!",
-    accessibleRoles: ["support"]
+    accessibleRoles: ["teamlead_manager"]
   },
   {
-    id: "training-merchant",
-    email: "merchant@training.local",
-    displayName: "Учебный мерчант",
-    role: "merchant",
-    roleLabel: "Мерчант",
+    id: "training-trader-manager",
+    email: "trader.manager@training.local",
+    displayName: "Учебный TRADER_MANAGER",
+    role: "trader_manager",
+    roleLabel: "TRADER_MANAGER",
     password: "Training123!",
-    accessibleRoles: ["merchant"]
+    accessibleRoles: ["trader_manager"]
   },
   {
     id: "training-trader",
     email: "trader@training.local",
-    displayName: "Учебный трейдер",
+    displayName: "Учебный TRADER",
     role: "trader",
-    roleLabel: "Трейдер",
+    roleLabel: "TRADER",
     password: "Training123!",
     accessibleRoles: ["trader"]
   },
   {
-    id: "training-provider",
-    email: "provider@training.local",
-    displayName: "Учебный провайдер",
-    role: "provider",
-    roleLabel: "Провайдер",
+    id: "training-merchant",
+    email: "merchant@training.local",
+    displayName: "Учебный MERCHANT",
+    role: "merchant",
+    roleLabel: "MERCHANT",
     password: "Training123!",
-    accessibleRoles: ["provider"]
+    accessibleRoles: ["merchant"]
+  },
+  {
+    id: "training-merchant-manager",
+    email: "merchant.manager@training.local",
+    displayName: "Учебный MERCHANT_MANAGER",
+    role: "merchant_manager",
+    roleLabel: "MERCHANT_MANAGER",
+    password: "Training123!",
+    accessibleRoles: ["merchant_manager"]
+  },
+  {
+    id: "training-head-support",
+    email: "head.support@training.local",
+    displayName: "Учебный HEAD_SUPPORT",
+    role: "head_support",
+    roleLabel: "HEAD_SUPPORT",
+    password: "Training123!",
+    accessibleRoles: ["head_support"]
+  },
+  {
+    id: "training-support",
+    email: "support@training.local",
+    displayName: "Учебный SUPPORT",
+    role: "support",
+    roleLabel: "SUPPORT",
+    password: "Training123!",
+    accessibleRoles: ["support"]
   }
 ];
 

@@ -30,17 +30,17 @@ describe("App", () => {
     const user = await loginAs("admin@training.local");
 
     await user.click(screen.getByRole("button", { name: "Сменить роль" }));
-    await user.click(screen.getByRole("button", { name: /Мерчант/i }));
+    await user.click(screen.getByRole("button", { name: /MERCHANT_MANAGER/i }));
 
     expect(screen.getByText("Учебные модули роли")).toBeInTheDocument();
-    expect(screen.getAllByText("Мерчант").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("MERCHANT_MANAGER").length).toBeGreaterThan(0);
   });
 
   it("filters modules by selected role", async () => {
     await loginAs("trader@training.local");
 
-    expect(screen.getAllByText("Депозит трейдера").length).toBeGreaterThan(0);
-    expect(screen.queryByText("Мерчанты и API")).not.toBeInTheDocument();
+    expect(screen.getAllByText("TRADER: реквизиты, устройство, ордера").length).toBeGreaterThan(0);
+    expect(screen.queryByText("MERCHANT: api_key и входящие ордера")).not.toBeInTheDocument();
   });
 
   it("shows login error for wrong credentials", async () => {

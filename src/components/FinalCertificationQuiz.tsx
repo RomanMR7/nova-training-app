@@ -31,13 +31,13 @@ export function FinalCertificationQuiz({
 }: FinalCertificationQuizProps) {
   const isAdmin = isTrainingAdmin(currentUser);
   const accessibleRoles = getAccessibleRoles(currentUser);
-  const initialExam: ExamId = role ?? accessibleRoles[0] ?? "Администратор";
+  const initialExam: ExamId = role ?? accessibleRoles[0] ?? "ADMIN";
   const [selectedExam, setSelectedExam] = useState<ExamId>(initialExam);
   const [answers, setAnswers] = useState<QuizAnswers>({});
   const [score, setScore] = useState<QuizScore | null>(null);
   const questions =
     selectedExam === "all" ? finalCertificationQuiz : roleFinalExams[selectedExam];
-  const scoreRole: Role = selectedExam === "all" ? "Администратор" : selectedExam;
+  const scoreRole: Role = selectedExam === "all" ? "ADMIN" : selectedExam;
   const activeScore =
     score ?? (selectedExam === role ? previousScore : getPreviousScore(scoreRole));
 
@@ -92,7 +92,7 @@ export function FinalCertificationQuiz({
             </select>
           </label>
           <p>
-            Администратор может пройти любой ролевой маршрут. Общий экзамен
+            ADMIN может пройти любой ролевой маршрут. Общий экзамен
             остается дополнительной проверкой по всем ролям.
           </p>
         </div>

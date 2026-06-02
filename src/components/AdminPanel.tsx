@@ -175,14 +175,14 @@ export function AdminPanel({ currentUser, onBack }: AdminPanelProps) {
         <button className="ghost-button" type="button" onClick={onBack}>
           К дашборду
         </button>
-        <span className="role-badge">Администратор</span>
+        <span className="role-badge">ADMIN</span>
       </div>
 
       <div className="section-heading">
         <p className="eyebrow">Центр обучения</p>
         <h1 id="admin-title">Сотрудники и статистика</h1>
         <p>
-          Администратор создает учебные аккаунты, назначает роли, блокирует
+          ADMIN создает учебные аккаунты, назначает роли, блокирует
           доступ и смотрит прогресс сотрудников. Пароли не экспортируются и не
           сохраняются в таблицах приложения.
         </p>

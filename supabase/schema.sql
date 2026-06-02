@@ -9,12 +9,23 @@ begin
   if not exists (select 1 from pg_type where typname = 'training_role') then
     create type training_role as enum (
       'admin',
-      'support',
-      'merchant',
+      'teamlead_manager',
+      'trader_manager',
       'trader',
-      'provider'
+      'merchant',
+      'merchant_manager',
+      'head_support',
+      'support'
     );
   end if;
+end $$;
+
+do $$
+begin
+  alter type training_role add value if not exists 'teamlead_manager';
+  alter type training_role add value if not exists 'trader_manager';
+  alter type training_role add value if not exists 'merchant_manager';
+  alter type training_role add value if not exists 'head_support';
 end $$;
 
 create table if not exists public.training_users (

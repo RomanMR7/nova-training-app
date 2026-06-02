@@ -14,20 +14,20 @@ describe("progress persistence", () => {
   });
 
   it("saves selected role and completed modules in localStorage", () => {
-    selectRole("Трейдер", "trader@training.local");
-    markModuleCompleted("payment-orders", "trader@training.local", "Трейдер");
+    selectRole("TRADER", "trader@training.local");
+    markModuleCompleted("trader-requisites", "trader@training.local", "TRADER");
 
-    const progress = loadProgress("trader@training.local", "Трейдер");
-    const merchantProgress = loadProgress("trader@training.local", "Мерчант");
+    const progress = loadProgress("trader@training.local", "TRADER");
+    const merchantProgress = loadProgress("trader@training.local", "MERCHANT");
 
-    expect(progress.selectedRole).toBe("Трейдер");
-    expect(progress.completedModules).toContain("payment-orders");
-    expect(merchantProgress.completedModules).not.toContain("payment-orders");
+    expect(progress.selectedRole).toBe("TRADER");
+    expect(progress.completedModules).toContain("trader-requisites");
+    expect(merchantProgress.completedModules).not.toContain("trader-requisites");
   });
 
   it("saves quiz score and resets progress", () => {
     saveQuizScore(
-      "platform-overview",
+      "psp-role-map",
       {
         total: 2,
         correct: 2,
@@ -35,16 +35,16 @@ describe("progress persistence", () => {
         details: []
       },
       "support@training.local",
-      "Саппорт"
+      "SUPPORT"
     );
 
     expect(
-      loadProgress("support@training.local", "Саппорт").quizScores["platform-overview"]
+      loadProgress("support@training.local", "SUPPORT").quizScores["psp-role-map"]
         .percentage
     ).toBe(100);
-    resetCurrentUserProgress("support@training.local", "Саппорт");
+    resetCurrentUserProgress("support@training.local", "SUPPORT");
     expect(
-      loadProgress("support@training.local", "Саппорт").quizScores["platform-overview"]
+      loadProgress("support@training.local", "SUPPORT").quizScores["psp-role-map"]
     ).toBeUndefined();
     resetProgress();
   });

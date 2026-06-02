@@ -460,7 +460,7 @@ function App() {
       />
     ) : (
       <AccessDenied
-        requestedRole="Администратор"
+        requestedRole="ADMIN"
         user={currentUser}
         onBack={() => setScreen(selectedRole ? "dashboard" : "welcome")}
       />
