@@ -147,7 +147,10 @@ export function FinalCertificationQuiz({
       </div>
 
       {score ? (
-        <div className="result-panel" role="status">
+        <div
+          className={`result-panel ${score.percentage >= 80 ? "passed" : "needs-review"}`}
+          role="status"
+        >
           <h2>Итоговый результат</h2>
           <p>
             Верно {score.correct} из {score.total}. Итог: {score.percentage}%.
