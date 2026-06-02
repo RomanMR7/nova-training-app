@@ -118,7 +118,7 @@ button:disabled {
 .brand-button {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   min-height: 48px;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -132,6 +132,16 @@ button:disabled {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
+.brand-button::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent-strong), var(--blue));
+  box-shadow: 0 0 18px rgba(74, 163, 255, 0.42);
+}
+
 .brand-lockup {
   display: flex;
   align-items: center;
@@ -143,6 +153,10 @@ button:disabled {
   margin-bottom: 18px;
 }
 
+.brand-lockup.large .brand-mark {
+  display: none;
+}
+
 .brand-mark {
   flex: 0 0 auto;
   width: 76px;
@@ -152,9 +166,7 @@ button:disabled {
 }
 
 .brand-mark.small {
-  width: 36px;
-  height: 36px;
-  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.32));
+  display: none;
 }
 
 .role-badge,
@@ -355,7 +367,37 @@ select:focus-visible {
 }
 
 .welcome-copy {
-  padding: clamp(28px, 6vw, 68px);
+  min-height: 430px;
+  overflow: hidden;
+  position: relative;
+  padding: 56px;
+}
+
+.welcome-copy > * {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-copy::before,
+.login-copy::before,
+.dashboard-hero::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  background-image: url("../public/anchor-pay-logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: blur(1px) saturate(0.8);
+  mix-blend-mode: screen;
+  opacity: 0.095;
+}
+
+.welcome-copy::before {
+  right: -96px;
+  bottom: -112px;
+  width: min(440px, 72%);
+  aspect-ratio: 1;
 }
 
 .overview-panel {
@@ -456,6 +498,10 @@ li {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
   overflow: hidden;
+  background:
+    linear-gradient(120deg, rgba(74, 163, 255, 0.12), transparent 34%),
+    linear-gradient(240deg, rgba(201, 154, 73, 0.1), transparent 36%),
+    rgba(18, 27, 37, 0.92);
 }
 
 .login-copy,
@@ -471,6 +517,21 @@ li {
   background:
     linear-gradient(145deg, rgba(74, 163, 255, 0.2), rgba(201, 154, 73, 0.08)),
     rgba(11, 17, 24, 0.42);
+  overflow: hidden;
+  position: relative;
+}
+
+.login-copy > * {
+  position: relative;
+  z-index: 1;
+}
+
+.login-copy::before {
+  right: -110px;
+  bottom: -118px;
+  width: min(430px, 74%);
+  aspect-ratio: 1;
+  opacity: 0.085;
 }
 
 .login-form,
@@ -478,6 +539,14 @@ li {
 .exam-selector label {
   display: grid;
   gap: 8px;
+}
+
+.login-form {
+  align-content: center;
+  gap: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012)),
+    rgba(11, 17, 24, 0.24);
 }
 
 .login-form label,
@@ -638,7 +707,27 @@ li {
     linear-gradient(225deg, rgba(201, 154, 73, 0.11), transparent 38%),
     rgba(17, 26, 36, 0.9);
   box-shadow: var(--shadow);
-  padding: clamp(20px, 4vw, 34px);
+  overflow: hidden;
+  position: relative;
+  padding: 34px;
+}
+
+.dashboard-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-hero::before {
+  right: -64px;
+  top: -94px;
+  width: min(360px, 46%);
+  aspect-ratio: 1;
+  opacity: 0.07;
+}
+
+.dashboard-actions {
+  justify-content: flex-end;
+  max-width: 440px;
 }
 
 .progress-panel {
@@ -1163,6 +1252,16 @@ ol.rich-list li::before {
     border-bottom: 1px solid var(--line);
   }
 
+  .welcome-copy {
+    min-height: 360px;
+    padding: 40px;
+  }
+
+  .dashboard-actions {
+    justify-content: flex-start;
+    max-width: none;
+  }
+
   .role-grid,
   .module-grid,
   .reference-grid,
@@ -1202,7 +1301,15 @@ ol.rich-list li::before {
 
   .topbar-actions {
     width: 100%;
-    justify-content: space-between;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+
+  .topbar-actions::-webkit-scrollbar {
+    display: none;
   }
 
   .role-grid,
@@ -1230,6 +1337,43 @@ ol.rich-list li::before {
   .scenario-shell,
   .dashboard-section {
     padding: 18px;
+  }
+
+  .login-shell {
+    width: min(100% - 20px, 1040px);
+    padding: 18px 0;
+  }
+
+  .login-copy,
+  .login-form,
+  .demo-accounts,
+  .exam-selector,
+  .access-denied {
+    padding: 18px;
+  }
+
+  .welcome-copy {
+    min-height: 320px;
+  }
+
+  .welcome-copy::before,
+  .login-copy::before {
+    right: -92px;
+    bottom: -84px;
+    width: 270px;
+    opacity: 0.065;
+  }
+
+  .dashboard-hero::before {
+    right: -90px;
+    top: auto;
+    bottom: -110px;
+    width: 260px;
+    opacity: 0.055;
+  }
+
+  .dashboard-hero {
+    padding: 22px;
   }
 
   h1 {
