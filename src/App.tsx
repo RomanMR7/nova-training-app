@@ -371,7 +371,7 @@ function App() {
               <img
                 alt=""
                 className="brand-mark"
-                src="./anchor-pay-logo.png"
+                src="./anchor-pay-mark.png"
                 onError={(event) => {
                   event.currentTarget.style.display = "none";
                 }}
@@ -551,7 +551,7 @@ function App() {
           <img
             alt=""
             className="brand-mark small"
-            src="./anchor-pay-logo.png"
+            src="./anchor-pay-mark.png"
             onError={(event) => {
               event.currentTarget.style.display = "none";
             }}

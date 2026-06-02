@@ -7,8 +7,9 @@
       name="description"
       content="Anchor Pay — статичный учебный тренажер рабочего места для fintech-процессов"
     />
-    <link rel="icon" type="image/png" href="./anchor-pay-logo.png" />
-    <link rel="apple-touch-icon" href="./anchor-pay-logo.png" />
+    <link rel="icon" type="image/svg+xml" href="./favicon-anchor-pay.svg" />
+    <link rel="alternate icon" type="image/png" href="./anchor-pay-mark.png" />
+    <link rel="apple-touch-icon" href="./anchor-pay-mark.png" />
     <title>Anchor Pay Training</title>
   </head>
   <body>
@@ -26,7 +27,9 @@
         document
           .querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]')
           .forEach(function (link) {
-            link.href = "./public/anchor-pay-logo.png";
+            link.href = link.rel === "icon"
+              ? "./public/favicon-anchor-pay.svg"
+              : "./public/anchor-pay-mark.png";
           });
 
         var stylesheet = document.createElement("link");

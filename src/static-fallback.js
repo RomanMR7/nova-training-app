@@ -264,7 +264,7 @@
     var role = session ? activeRole() : null;
     root.innerHTML =
       '<main class="app-shell">' +
-      '<header class="topbar"><button class="brand-button" type="button" data-action="dashboard"><img alt="" class="brand-mark small" src="./public/anchor-pay-logo.png" onerror="this.style.display=&quot;none&quot;"><span>Anchor Pay</span></button>' +
+      '<header class="topbar"><button class="brand-button" type="button" data-action="dashboard"><img alt="" class="brand-mark small" src="./public/anchor-pay-mark.png" onerror="this.style.display=&quot;none&quot;"><span>Anchor Pay</span></button>' +
       '<div class="topbar-actions">' +
       (session ? '<span class="account-badge">' + escapeHtml(session.displayName) + '</span><span class="role-badge">' + escapeHtml(role) + '</span><span class="status-pill">Offline demo</span><button class="ghost-button compact" type="button" data-action="logout">Выйти</button>' : "") +
       "</div></header>" +
@@ -275,7 +275,7 @@
   function renderLogin() {
     root.innerHTML =
       '<main class="login-shell"><section class="login-panel" aria-labelledby="login-title"><div class="login-copy">' +
-      '<div class="brand-lockup large"><img alt="" class="brand-mark" src="./public/anchor-pay-logo.png" onerror="this.style.display=&quot;none&quot;"><div><p class="eyebrow">Учебный тренажер рабочего места</p><h1 id="login-title">Anchor Pay</h1></div></div>' +
+      '<div class="brand-lockup large"><img alt="" class="brand-mark" src="./public/anchor-pay-mark.png" onerror="this.style.display=&quot;none&quot;"><div><p class="eyebrow">Учебный тренажер рабочего места</p><h1 id="login-title">Anchor Pay</h1></div></div>' +
       '<p class="lead">Новая PSP-программа: ADMIN, TEAMLEAD_MANAGER, TRADER_MANAGER, TRADER, MERCHANT, MERCHANT_MANAGER, HEAD_SUPPORT и SUPPORT. Все данные учебные.</p>' +
       '<div class="mode-note warning">Прямое открытие index.html работает локально: пароль Training123!, прогресс хранится только в браузере.</div></div>' +
       '<form class="login-form" id="fallback-login-form"><label><span>Email</span><input id="fallback-email" type="email" autocomplete="username"></label><label><span>Пароль</span><input id="fallback-password" type="password" autocomplete="current-password"></label>' +

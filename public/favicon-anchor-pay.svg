@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Anchor Pay">
+  <defs>
+    <linearGradient id="anchorPayBlue" x1="12" x2="52" y1="8" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#58adff"/>
+      <stop offset="0.5" stop-color="#1f6fb4"/>
+      <stop offset="1" stop-color="#0b2f57"/>
+    </linearGradient>
+    <linearGradient id="anchorPayGold" x1="14" x2="50" y1="12" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f5d58b"/>
+      <stop offset="1" stop-color="#c99a49"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 6a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm0 5a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" fill="url(#anchorPayBlue)"/>
+  <path d="M29 20h6v28c5-1 9-4 12-9l-5-1 10-10 6 13-5-1c-4 9-12 14-21 14s-17-5-21-14l-5 1 6-13 10 10-5 1c3 5 7 8 12 9V20Z" fill="url(#anchorPayBlue)" stroke="#061625" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M16 25h40v6H16z" fill="url(#anchorPayBlue)" stroke="#061625" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M21 38c4-5 18-5 22 0 2 2 1 5-2 6-5 3-17 3-22 0-3-1-4-4-2-6Z" fill="#061625" opacity=".55"/>
+  <text x="32" y="43" text-anchor="middle" font-family="Georgia, serif" font-size="17" font-weight="700" fill="url(#anchorPayGold)" stroke="#120c05" stroke-width=".7">AP</text>
+</svg>
